@@ -1,0 +1,26 @@
+{
+  "id": "0.1",
+  "phase": 0,
+  "title": "Hangul Basics: Syllable Blocks",
+  "description": "Learn how Korean syllables are organized into blocks",
+  "explanation": "# How Hangul Works\n\nUnlike English (which reads left to right) or Arabic (which reads right to left), Korean syllables are organized into **square blocks**.\n\n## Syllable Structure\n\nEach block contains:\n- **Initial consonant** (자음) — top left or left\n- **Vowel** (모음) — top right or right\n- **Final consonant** (종성) — bottom (optional)\n\n### Examples:\n\n| Character | Components | Meaning |\n|-----------|-----------|----------|\n| **가** | ㄱ + ㅏ | go |\n| **나** | ㄴ + ㅏ | I, me |\n| **닭** | ㄷ + ㅏ + ㄹ | chicken |\n\n## Why Blocks?\n\nHangul's **square design** is genius because:\n1. **Easy to read** — all syllables are the same size\n2. **Easy to type** — syllables fit naturally on keyboards\n3. **Makes sense** — the shapes relate to mouth positions!\n\n## Reading Order\n\nRead each block like this:\n1. Top-to-bottom\n2. Left-to-right (within the block)\n\nSo **가** reads: top-left (ㄱ) → right (ㅏ) = \"ga\"\n\n---\n\n💡 **Pro tip:** Every Korean syllable you'll ever see fits into this block pattern. Master this, and you're ready to learn!",
+  "examples": ["item.가", "item.나", "item.다"],
+  "exercises": [
+    {
+      "type": "recognize",
+      "prompt": "Which part of 나 is the vowel?",
+      "answer": "ㅏ",
+      "acceptedAnswers": ["ㅏ", "vowel", "right side"],
+      "explanationIfWrong": "The vowel ㅏ is on the right side of the block."
+    },
+    {
+      "type": "readAloud",
+      "prompt": "Say this syllable aloud: 가",
+      "answer": "ga",
+      "acceptedAnswers": ["ga", "깨"],
+      "explanationIfWrong": "This is ㄱ (k) + ㅏ (ah) = ga"
+    }
+  ],
+  "grammarPointId": "hangul-syllables",
+  "prerequisites": []
+}

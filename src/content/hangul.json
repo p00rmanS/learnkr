@@ -1,0 +1,48 @@
+{
+  "vowels": [
+    {
+      "char": "ㅏ",
+      "romanization": "a",
+      "pronunciation": "/ɑ/",
+      "description": "Open front vowel. Say 'ah' like in 'father'.",
+      "example": "감 (gam - sweet potato)"
+    },
+    {
+      "char": "ㅓ",
+      "romanization": "eo",
+      "pronunciation": "/ʌ/",
+      "description": "Open-mid back vowel. Say 'uh' like in 'cup'.",
+      "example": "검 (geom - black)"
+    },
+    {
+      "char": "ㅗ",
+      "romanization": "o",
+      "pronunciation": "/o/",
+      "description": "Close-mid back vowel. Say 'oh' like in 'go'.",
+      "example": "골 (gol - hole)"
+    }
+  ],
+  "consonants": [
+    {
+      "char": "ㄱ",
+      "romanization": "g/k",
+      "pronunciation": "[g]~[k]",
+      "shape": "Represents the back of the tongue blocking the throat.",
+      "example": "가 (ga - go)"
+    },
+    {
+      "char": "ㄴ",
+      "romanization": "n",
+      "pronunciation": "[n]",
+      "shape": "Represents the tongue touching the roof of the mouth.",
+      "example": "나 (na - I, me)"
+    },
+    {
+      "char": "ㄷ",
+      "romanization": "d/t",
+      "pronunciation": "[d]~[t]",
+      "shape": "Represents the tongue touching the front of the roof of the mouth.",
+      "example": "다 (da - all)"
+    }
+  ]
+}
