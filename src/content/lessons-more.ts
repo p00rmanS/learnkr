@@ -664,11 +664,4 @@ export const MORE2: Lesson[] = [
   },
 ];
 
-export const UPCOMING2: { id: string; title: string; ko: string }[] = [
-  { id: '2.5', title: 'Location: 에 vs 에서', ko: '에 / 에서' },
-  { id: '2.6', title: 'Past tense', ko: '-았어요 / -었어요' },
-  { id: '2.7', title: 'Wanting: -고 싶어요', ko: '-고 싶어요' },
-  { id: '2.8', title: 'Future and plans', ko: '-(으)ㄹ 거예요' },
-  { id: '2.9', title: 'Linking sentences', ko: '-고, 그리고, 그런데' },
-  { id: '2.10', title: 'Can and cannot', ko: '-(으)ㄹ 수 있어요' },
-];
+export const UPCOMING2: { id: string; title: string; ko: string }[] = [];

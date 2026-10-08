@@ -6,6 +6,7 @@ const PHASES = [
   { n: 0, tag: 'Phase 0', name: '한글: Hangul' },
   { n: 1, tag: 'Phase 1', name: '생존 한국어: Survival Korean' },
   { n: 2, tag: 'Phase 2', name: '문장 만들기: Building Sentences' },
+  { n: 3, tag: 'Phase 3', name: '실전 대화: Real Conversations' },
 ] as const;
 
 export function Path() {
