@@ -414,6 +414,7 @@ const BASE: Omit<Lesson, 'phase'>[] = [
 import { ENRICH, MORE, UPCOMING as UP1 } from './lessons-extra';
 import { MORE2, UPCOMING2 } from './lessons-more';
 import { MORE3, UPCOMING3 } from './lessons-phase2';
+import { EVERYDAY } from './lessons-everyday';
 
 export const UPCOMING = [...UP1, ...UPCOMING2, ...UPCOMING3];
 
@@ -429,4 +430,5 @@ export const LESSONS: Lesson[] = [
   ...MORE,
   ...MORE2,
   ...MORE3,
+  ...EVERYDAY,
 ];

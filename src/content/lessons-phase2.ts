@@ -432,11 +432,4 @@ export const MORE3: Lesson[] = [
   },
 ];
 
-export const UPCOMING3: { id: string; title: string; ko: string }[] = [
-  { id: '3.1', title: 'Introducing yourself', ko: '자기소개' },
-  { id: '3.2', title: 'Ordering at a cafe', ko: '카페에서' },
-  { id: '3.3', title: 'Shopping', ko: '쇼핑' },
-  { id: '3.4', title: 'Taking the subway', ko: '지하철' },
-  { id: '3.5', title: 'Making plans with a friend', ko: '약속' },
-  { id: '3.6', title: 'Talking about your weekend', ko: '주말' },
-];
+export const UPCOMING3: { id: string; title: string; ko: string }[] = [];
