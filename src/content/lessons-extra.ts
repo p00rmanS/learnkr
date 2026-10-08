@@ -701,10 +701,4 @@ export const MORE: Lesson[] = [
   },
 ];
 
-export const UPCOMING: { id: string; title: string; ko: string }[] = [
-  { id: '1.4', title: 'This / that / over there', ko: '이 / 그 / 저' },
-  { id: '1.5', title: 'Have / do not have', ko: '있어요 / 없어요' },
-  { id: '1.6', title: 'Sino-Korean numbers', ko: '일 이 삼' },
-  { id: '1.7', title: 'Native Korean numbers', ko: '하나 둘 셋' },
-  { id: '1.8', title: 'Polite requests', ko: '-주세요' },
-];
+export const UPCOMING: { id: string; title: string; ko: string }[] = [];

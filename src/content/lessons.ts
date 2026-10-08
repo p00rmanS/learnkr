@@ -21,7 +21,7 @@ export type Step =
 
 export interface Lesson {
   id: string;
-  phase: 0 | 1;
+  phase: 0 | 1 | 2;
   title: string;
   ko: string;
   blurb: string;
@@ -411,9 +411,10 @@ const BASE: Omit<Lesson, 'phase'>[] = [
   },
 ];
 
-import { ENRICH, MORE, UPCOMING } from './lessons-extra';
+import { ENRICH, MORE, UPCOMING as UP1 } from './lessons-extra';
+import { MORE2, UPCOMING2 } from './lessons-more';
 
-export { UPCOMING };
+export const UPCOMING = [...UP1, ...UPCOMING2];
 
 export const LESSONS: Lesson[] = [
   ...BASE.map((l): Lesson => ({
@@ -425,4 +426,5 @@ export const LESSONS: Lesson[] = [
     }),
   })),
   ...MORE,
+  ...MORE2,
 ];
