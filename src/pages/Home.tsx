@@ -22,7 +22,8 @@ const PHASES = [
   { n: 0, title: 'Hangul', ko: '한글', desc: 'Read every letter and real words within days.' },
   { n: 1, title: 'Survival Korean', ko: '생존 한국어', desc: 'Greetings, numbers, ordering and asking for things.' },
   { n: 2, title: 'Building Sentences', ko: '문장 만들기', desc: 'Particles, tenses, wants, plans and abilities.' },
-  { n: 3, title: 'Real Conversations', ko: '실전 대화', desc: 'Restaurants, shops, the subway, friends and fillers.' },
+  { n: 3, title: 'Real Conversations', ko: '실전 대화', desc: 'Restaurants, shops, the subway, family, weather, health and fillers.' },
+  { n: 4, title: 'Level Up', ko: '더 멀리', desc: 'Polite commands, reasons, conditions, question words and natural adverbs.' },
 ];
 
 function lastDays(n: number): string[] {
@@ -179,7 +180,7 @@ export function Home() {
 
       <section className="sec">
         <p className="eyebrow">The road</p>
-        <h2 className="h-sec" style={{ marginTop: 16 }}>{total} lessons, four stages.</h2>
+        <h2 className="h-sec" style={{ marginTop: 16 }}>{total} lessons, five stages.</h2>
         <div className="bands">
           {PHASES.map((p) => {
             const ls = LESSONS.filter((l) => l.phase === p.n);

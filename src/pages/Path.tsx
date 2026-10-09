@@ -9,6 +9,7 @@ const PHASES = [
   { n: 1, name: 'Survival Korean', ko: '생존 한국어' },
   { n: 2, name: 'Building Sentences', ko: '문장 만들기' },
   { n: 3, name: 'Real Conversations', ko: '실전 대화' },
+  { n: 4, name: 'Level Up', ko: '더 멀리' },
 ] as const;
 
 const ROW = 118;
@@ -79,7 +80,7 @@ export function Path() {
     <div className="page">
       <p className="eyebrow">The road</p>
       <h1 className="h-page" style={{ marginTop: 18 }}>Walk it <em>one stop</em> at a time.</h1>
-      <p className="lede">Four stages from your first letter to real conversations. Every finished stop stays open if you want to return.</p>
+      <p className="lede">Five stages from your first letter to confident, natural Korean. Every finished stop stays open if you want to return.</p>
 
       <div className="roadmap" style={{ height }}>
         <svg viewBox={`0 0 100 ${height}`} preserveAspectRatio="none">

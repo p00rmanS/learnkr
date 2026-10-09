@@ -3,7 +3,7 @@ import type { Lesson, Step } from './lessons';
 type Ph = { ko: string; en: string; rom?: string };
 
 /** Teaching card: title, English body, Taglish, pro tip, memory hook, phrase cards. */
-const tc = (title: string, body: string[], tl: string, tip: string, remember: string, phrases: Ph[]): Step => ({
+export const tc = (title: string, body: string[], tl: string, tip: string, remember: string, phrases: Ph[]): Step => ({
   kind: 'teach',
   title,
   body,
@@ -14,7 +14,7 @@ const tc = (title: string, body: string[], tl: string, tip: string, remember: st
 });
 
 /** Multiple choice. The right answer is slotted in at a varying position. */
-const ch = (
+export const ch = (
   prompt: string,
   answer: string,
   wrong: string[],
@@ -27,7 +27,7 @@ const ch = (
   return { kind: 'choice', prompt, options, answer, why, whyTl, ...extra };
 };
 
-const it = (id: string, korean: string, english: string) => ({ id: `e.${id}`, korean, english });
+export const it = (id: string, korean: string, english: string) => ({ id: `e.${id}`, korean, english });
 
 export const EVERYDAY: Lesson[] = [
   {
