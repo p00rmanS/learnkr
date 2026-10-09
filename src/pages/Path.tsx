@@ -1,60 +1,128 @@
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Check } from '../components/Icons';
 import { LESSONS, UPCOMING } from '../content/lessons';
 import { useAppStore } from '../store';
 
 const PHASES = [
-  { n: 0, tag: 'Phase 0', name: '한글: Hangul' },
-  { n: 1, tag: 'Phase 1', name: '생존 한국어: Survival Korean' },
-  { n: 2, tag: 'Phase 2', name: '문장 만들기: Building Sentences' },
-  { n: 3, tag: 'Phase 3', name: '실전 대화: Real Conversations' },
+  { n: 0, name: 'Hangul', ko: '한글' },
+  { n: 1, name: 'Survival Korean', ko: '생존 한국어' },
+  { n: 2, name: 'Building Sentences', ko: '문장 만들기' },
+  { n: 3, name: 'Real Conversations', ko: '실전 대화' },
 ] as const;
+
+const ROW = 118;
+const HEAD = 150;
+
+interface Node {
+  id: string;
+  title: string;
+  ko: string;
+  blurb: string;
+  phase: number;
+  x: number;
+  y: number;
+  written: boolean;
+}
+
+function useNarrow() {
+  const [n, setN] = useState(() => window.matchMedia('(max-width: 720px)').matches);
+  useEffect(() => {
+    const m = window.matchMedia('(max-width: 720px)');
+    const f = () => setN(m.matches);
+    m.addEventListener('change', f);
+    return () => m.removeEventListener('change', f);
+  }, []);
+  return n;
+}
 
 export function Path() {
   const completed = useAppStore((s) => s.progress.completedLessons);
+  const narrow = useNarrow();
   const nextId = LESSONS.find((l) => !completed.includes(l.id))?.id;
 
-  return (
-    <>
-      <p className="eyebrow">The road</p>
-      <h1 className="h-page">Your path</h1>
-      <p className="lede">Finish Hangul first, then walk into real sentences. Every finished lesson is a stop you can come back to.</p>
+  const { nodes, heads, height } = useMemo(() => {
+    const nodes: Node[] = [];
+    const heads: { n: number; y: number }[] = [];
+    let y = 20;
+    let k = 0;
+    for (const ph of PHASES) {
+      heads.push({ n: ph.n, y });
+      y += HEAD;
+      const items = [
+        ...LESSONS.filter((l) => l.phase === ph.n).map((l) => ({ ...l, written: true })),
+        ...UPCOMING.filter((u) => u.id.startsWith(`${ph.n}.`)).map((u) => ({ ...u, blurb: '', written: false })),
+      ];
+      for (const l of items) {
+        const x = narrow ? 11 + 5 * Math.sin(k * 0.9) : 50 + 24 * Math.sin(k * 0.95);
+        nodes.push({ id: l.id, title: l.title, ko: l.ko, blurb: l.blurb, phase: ph.n, x, y, written: l.written });
+        y += ROW;
+        k++;
+      }
+      y += 30;
+    }
+    return { nodes, heads, height: y };
+  }, [narrow]);
 
-      {PHASES.map((ph) => {
-        const lessons = LESSONS.filter((l) => l.phase === ph.n);
-        const later = UPCOMING.filter((u) => u.id.startsWith(`${ph.n}.`));
-        return (
-          <section key={ph.n}>
-            <div className="phase-head"><p className="eyebrow">{ph.tag}</p><h2 className="ko" style={{ fontSize: 24, fontWeight: 700 }}>{ph.name}</h2></div>
-            <div className="road">
-              {lessons.map((l) => {
-                const isDone = completed.includes(l.id);
-                const isNext = l.id === nextId;
-                return (
-                  <Link key={l.id} to={`/learn/${l.id}`} className={`stop ${isDone ? 'done' : ''} ${isNext ? 'next' : ''}`}>
-                    <div className="dot">{isDone ? 'OK' : l.id}</div>
-                    <div>
-                      <h3>{l.title}</h3>
-                      <p><span className="ko">{l.ko}</span> &middot; {l.blurb}</p>
-                    </div>
-                    {isNext && <span className="tag red">Up next</span>}
-                    {isDone && <span className="tag">Done</span>}
-                  </Link>
-                );
-              })}
-              {later.map((l) => (
-                <div key={l.id} className="stop later">
-                  <div className="dot">{l.id}</div>
-                  <div>
-                    <h3>{l.title}</h3>
-                    <p className="ko">{l.ko}</p>
-                  </div>
-                  <span className="tag">Not written yet</span>
-                </div>
-              ))}
+  const pathFor = (phase: number, onlyWalked = false) => {
+    const pts = nodes.filter((n) => n.phase === phase && (!onlyWalked || completed.includes(n.id) || n.id === nextId));
+    if (pts.length < 2) return '';
+    return pts.reduce((d, p, i) => {
+      if (i === 0) return `M ${p.x} ${p.y}`;
+      const q = pts[i - 1];
+      const m = (q.y + p.y) / 2;
+      return `${d} C ${q.x} ${m}, ${p.x} ${m}, ${p.x} ${p.y}`;
+    }, '');
+  };
+
+  return (
+    <div className="page">
+      <p className="eyebrow">The road</p>
+      <h1 className="h-page" style={{ marginTop: 18 }}>Walk it <em>one stop</em> at a time.</h1>
+      <p className="lede">Four stages from your first letter to real conversations. Every finished stop stays open if you want to return.</p>
+
+      <div className="roadmap" style={{ height }}>
+        <svg viewBox={`0 0 100 ${height}`} preserveAspectRatio="none">
+          {PHASES.map((p) => (
+            <g key={p.n} data-phase={p.n}>
+              <path className="rail" d={pathFor(p.n)} stroke="var(--ph)" strokeOpacity="0.45" />
+              <path className="walked" d={pathFor(p.n, true)} />
+            </g>
+          ))}
+        </svg>
+
+        {heads.map((h) => {
+          const p = PHASES[h.n];
+          return (
+            <div key={h.n} className="rm-phase" data-phase={h.n} style={{ top: h.y }}>
+              <p className="eyebrow">Stage {p.n}</p>
+              <h2>{p.name}<span>{p.ko}</span></h2>
             </div>
-          </section>
-        );
-      })}
-    </>
+          );
+        })}
+
+        {nodes.map((n) => {
+          const isDone = completed.includes(n.id);
+          const isNext = n.id === nextId;
+          const left = !narrow && n.x > 50;
+          const inner = (
+            <>
+              <div className="pin">{isDone ? <Check width={22} height={22} strokeWidth={2.6} /> : n.id}</div>
+              <div className="lbl">
+                <b>{n.title}</b>
+                <small><span className="kr">{n.ko}</span>{n.written ? ` · ${n.blurb}` : ' · coming soon'}</small>
+              </div>
+            </>
+          );
+          const cls = `node ${left ? 'left' : ''} ${isDone ? 'done' : ''} ${isNext ? 'next' : ''}`;
+          const style = { left: `${n.x}%`, top: n.y, opacity: n.written ? 1 : 0.45 };
+          return n.written ? (
+            <Link key={n.id} to={`/learn/${n.id}`} className={cls} style={style} data-phase={n.phase}>{inner}</Link>
+          ) : (
+            <div key={n.id} className={cls} style={style} data-phase={n.phase}>{inner}</div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
