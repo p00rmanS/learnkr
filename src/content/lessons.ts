@@ -416,6 +416,7 @@ import { MORE2, UPCOMING2 } from './lessons-more';
 import { MORE3, UPCOMING3 } from './lessons-phase2';
 import { EVERYDAY } from './lessons-everyday';
 import { DAILY, LEVELUP } from './lessons-daily';
+import { EXTRA3, LEVELUP2 } from './lessons-more3';
 
 export const UPCOMING = [...UP1, ...UPCOMING2, ...UPCOMING3];
 
@@ -433,5 +434,7 @@ export const LESSONS: Lesson[] = [
   ...MORE3,
   ...EVERYDAY,
   ...DAILY,
+  ...EXTRA3,
   ...LEVELUP,
+  ...LEVELUP2,
 ];
