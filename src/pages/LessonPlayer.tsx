@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Assemble } from '../components/Assemble';
 import { Arrow, Bolt, Bubble, Close, Knot, Speaker } from '../components/Icons';
-import { LESSONS, type Step } from '../content/lessons';
+import { Say } from '../components/Say';
+import { ALL_LESSONS, type Step } from '../content/lessons';
 import { composeSyllable } from '../lib/hangul';
-import { speakKorean } from '../lib/speech';
+import { koreanVoiceAvailable, speakKorean } from '../lib/speech';
 import { useAppStore } from '../store';
 
 const BURST = ['var(--red)', 'var(--blue)', 'var(--gold)', 'var(--jade)'];
+type Speak = (t: string) => void;
+const hasHangul = (t: string) => /[가-힣]/.test(t);
 
-function Teach({ step, onNext }: { step: Extract<Step, { kind: 'teach' }>; onNext: () => void }) {
+function Teach({ step, onNext, speak }: { step: Extract<Step, { kind: 'teach' }>; onNext: () => void; speak: Speak }) {
   return (
     <>
       <div className="step">
@@ -20,9 +23,10 @@ function Teach({ step, onNext }: { step: Extract<Step, { kind: 'teach' }>; onNex
         {step.glyphs && (
           <div className="specimens">
             {step.glyphs.map((g) => (
-              <button key={g.ch} type="button" className="spec" onClick={() => speakKorean(g.ch)} aria-label={`${g.ch}, ${g.sub}`}>
+              <button key={g.ch} type="button" className="spec" onClick={() => speak(g.ch)} aria-label={`${g.ch}, ${g.sub}`}>
                 <div className="cell-s">{g.ch}</div>
                 <span className="cap">{g.sub}</span>
+                {hasHangul(g.ch) && <Say text={g.ch} compact />}
               </button>
             ))}
           </div>
@@ -31,29 +35,35 @@ function Teach({ step, onNext }: { step: Extract<Step, { kind: 'teach' }>; onNex
         {step.blocks && (
           <div className="specimens">
             {step.blocks.map((b) => (
-              <button key={b.ch} type="button" className="spec" onClick={() => speakKorean(b.ch)} aria-label={b.ch}>
+              <button key={b.ch} type="button" className="spec" onClick={() => speak(b.ch)} aria-label={b.ch}>
                 <div className="cell-s">{b.ch}</div>
                 <div className="parts">
                   {b.parts.map((p, i) => (
                     <span key={i} style={{ color: i === 0 ? 'var(--red)' : i === 1 ? 'var(--blue)' : 'var(--gold)' }}>{p}</span>
                   ))}
                 </div>
+                <Say text={b.ch} compact />
               </button>
             ))}
           </div>
         )}
 
         {step.phrases && (
-          <div className="phrases">
-            {step.phrases.map((p) => (
-              <button key={p.ko} type="button" className="phrase" onClick={() => speakKorean(p.ko)} aria-label={`${p.ko}, ${p.en}`}>
-                <Speaker className="sp" width={18} height={18} />
-                <span className="phrase-ko">{p.ko}</span>
-                <span className="phrase-en">{p.en}</span>
-                {p.rom && <span className="phrase-rom">{p.rom}</span>}
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="phrases">
+              {step.phrases.map((p) => (
+                <button key={p.ko} type="button" className="phrase" onClick={() => speak(p.ko)} aria-label={`${p.ko}, ${p.en}`}>
+                  <Speaker className="sp" width={18} height={18} />
+                  <span className="phrase-ko">{p.ko}</span>
+                  {hasHangul(p.ko) && <Say text={p.ko} />}
+                  <span className="phrase-en">{p.en}</span>
+                </button>
+              ))}
+            </div>
+            <p className="say-legend">
+              <b>say it</b> shows how to sound each part out. Read the vowels like Filipino or Spanish: a, e, i, o, u. Give every syllable the same beat.
+            </p>
+          </>
         )}
 
         {(step.tl || step.tip || step.remember) && (
@@ -77,7 +87,7 @@ function Teach({ step, onNext }: { step: Extract<Step, { kind: 'teach' }>; onNex
 
 function Feedback({ ok, why, whyTl, onNext, extra }: { ok: boolean; why: string; whyTl?: string; onNext: () => void; extra?: string }) {
   return (
-    <div className={`actionbar ${ok ? 'good' : 'bad'}`}>
+    <div className={`actionbar ${ok ? 'good' : 'bad'}`} role="status">
       <div className="in">
         <div className="verdict">
           <b>{ok ? '맞아요. Correct.' : extra || 'Not quite.'}</b>
@@ -90,7 +100,7 @@ function Feedback({ ok, why, whyTl, onNext, extra }: { ok: boolean; why: string;
   );
 }
 
-function Choice({ step, onNext }: { step: Extract<Step, { kind: 'choice' }>; onNext: () => void }) {
+function Choice({ step, onNext, speak }: { step: Extract<Step, { kind: 'choice' }>; onNext: () => void; speak: Speak }) {
   const [picked, setPicked] = useState<string | null>(null);
   const textual = step.options.some((o) => o.length > 3);
   return (
@@ -98,9 +108,14 @@ function Choice({ step, onNext }: { step: Extract<Step, { kind: 'choice' }>; onN
       <div className="step">
         <span className="tag">Practice</span>
         <h1 style={{ fontSize: 'clamp(30px, 4.6vw, 52px)' }}>{step.prompt}</h1>
-        {step.big && <div className="bigq"><div className="cell-s" style={{ width: 'auto', minWidth: 160, height: 160, padding: '0 28px', fontSize: 84 }}>{step.big}</div></div>}
+        {step.big && (
+          <div className="bigq">
+            <div className="cell-s" style={{ width: 'auto', minWidth: 160, height: 160, padding: '0 28px', fontSize: step.big.length > 4 ? 52 : 84 }}>{step.big}</div>
+            {hasHangul(step.big) && <div style={{ marginTop: 10 }}><Say text={step.big} /></div>}
+          </div>
+        )}
         {step.speak && (
-          <button className="btn ghost" type="button" onClick={() => speakKorean(step.speak!)} style={{ marginTop: 18 }}>
+          <button className="btn ghost" type="button" onClick={() => speak(step.speak!)} style={{ marginTop: 18 }}>
             <Speaker width={18} height={18} /> Play sound
           </button>
         )}
@@ -118,7 +133,7 @@ function Choice({ step, onNext }: { step: Extract<Step, { kind: 'choice' }>; onN
   );
 }
 
-function Build({ step, onNext }: { step: Extract<Step, { kind: 'build' }>; onNext: () => void }) {
+function Build({ step, onNext, speak }: { step: Extract<Step, { kind: 'build' }>; onNext: () => void; speak: Speak }) {
   const [ini, setIni] = useState('');
   const [vow, setVow] = useState('');
   const [fin, setFin] = useState('');
@@ -132,7 +147,7 @@ function Build({ step, onNext }: { step: Extract<Step, { kind: 'build' }>; onNex
         <span className="tag">Build</span>
         <h1 style={{ fontSize: 'clamp(30px, 4.6vw, 52px)' }}>{step.prompt}</h1>
         {step.speak && (
-          <button className="btn ghost" type="button" onClick={() => speakKorean(step.speak!)} style={{ marginTop: 18 }}>
+          <button className="btn ghost" type="button" onClick={() => speak(step.speak!)} style={{ marginTop: 18 }}>
             <Speaker width={18} height={18} /> Play sound
           </button>
         )}
@@ -157,10 +172,20 @@ function Build({ step, onNext }: { step: Extract<Step, { kind: 'build' }>; onNex
 export function LessonPlayer() {
   const { id } = useParams();
   const nav = useNavigate();
-  const lesson = LESSONS.find((l) => l.id === id);
+  const lesson = ALL_LESSONS.find((l) => l.id === id);
   const completeLesson = useAppStore((s) => s.completeLesson);
   const [i, setI] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [slow, setSlow] = useState(false);
+  const [noVoice, setNoVoice] = useState(false);
+
+  useEffect(() => {
+    koreanVoiceAvailable().then((ok) => setNoVoice(!ok));
+  }, []);
+
+  const speak: Speak = (t) => {
+    speakKorean(t, slow ? 0.7 : 1);
+  };
 
   if (!lesson) {
     return (
@@ -170,6 +195,8 @@ export function LessonPlayer() {
     );
   }
 
+  const isKids = lesson.phase === 5;
+  const home = isKids ? '/kids' : '/learn';
   const step = lesson.steps[i];
   const next = () => {
     if (i + 1 >= lesson.steps.length) {
@@ -179,17 +206,28 @@ export function LessonPlayer() {
       setI(i + 1);
     }
   };
-  const following = LESSONS[LESSONS.indexOf(lesson) + 1];
+  const candidate = ALL_LESSONS[ALL_LESSONS.indexOf(lesson) + 1];
+  const following = candidate && candidate.phase === lesson.phase ? candidate : undefined;
 
   return (
     <div className="lesson" data-phase={lesson.phase}>
       <div className="lesson-top">
-        <button className="x" type="button" onClick={() => nav('/learn')} aria-label="Exit lesson"><Close /></button>
+        <button className="x" type="button" onClick={() => nav(home)} aria-label="Exit lesson"><Close /></button>
         <div className="segs" role="progressbar" aria-valuemin={0} aria-valuemax={lesson.steps.length} aria-valuenow={finished ? lesson.steps.length : i}>
           {lesson.steps.map((_, n) => <i key={n} className={finished || n <= i ? 'on' : ''} />)}
         </div>
+        <button type="button" className={`speed ${slow ? 'on' : ''}`} aria-pressed={slow} onClick={() => setSlow((s) => !s)} title="Play audio more slowly">
+          {slow ? 'Slow' : '1×'}
+        </button>
         <span className="lesson-id">{lesson.id}</span>
       </div>
+
+      {noVoice && (
+        <div className="voice-note" role="alert">
+          No Korean voice found on this device, so audio may be silent. Try Chrome or Edge, or add a Korean voice in your system settings.
+          <button type="button" onClick={() => setNoVoice(false)} aria-label="Dismiss"><Close width={16} height={16} /></button>
+        </div>
+      )}
 
       <div className="lesson-body">
         {finished ? (
@@ -206,7 +244,7 @@ export function LessonPlayer() {
                 {following ? (
                   <button className="btn ph" type="button" onClick={() => { setI(0); setFinished(false); nav(`/learn/${following.id}`); }}>Next: {following.title} <Arrow /></button>
                 ) : (
-                  <Link className="btn ph" to="/learn">Back to the road</Link>
+                  <Link className="btn ph" to={home}>{isKids ? 'Back to Kids' : 'Back to the road'}</Link>
                 )}
                 <Link className="btn ghost" to="/review">Review now</Link>
               </div>
@@ -214,9 +252,9 @@ export function LessonPlayer() {
           </div>
         ) : (
           <div key={`${lesson.id}-${i}`}>
-            {step.kind === 'teach' && <Teach step={step} onNext={next} />}
-            {step.kind === 'choice' && <Choice step={step} onNext={next} />}
-            {step.kind === 'build' && <Build step={step} onNext={next} />}
+            {step.kind === 'teach' && <Teach step={step} onNext={next} speak={speak} />}
+            {step.kind === 'choice' && <Choice step={step} onNext={next} speak={speak} />}
+            {step.kind === 'build' && <Build step={step} onNext={next} speak={speak} />}
           </div>
         )}
       </div>

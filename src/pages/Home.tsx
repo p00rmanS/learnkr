@@ -148,6 +148,24 @@ export function Home() {
       </section>
 
       <section className="sec">
+        <p className="eyebrow">Read and play</p>
+        <div className="duo">
+          <Link to="/stories" className="duo-card">
+            <span className="lab">8 stories</span>
+            <h3>Read along</h3>
+            <p>Short dialogues, diaries and fables. Every line has sound, a say-it guide, romanization and English.</p>
+            <span className="duo-go">Open stories <Arrow width={18} height={18} /></span>
+          </Link>
+          <Link to="/kids" className="duo-card kid" data-phase="5">
+            <span className="lab">14 lessons</span>
+            <h3>Kids track</h3>
+            <p>Taught like kindergarten: picture alphabet, animal sounds, counting rhymes, colors and body parts.</p>
+            <span className="duo-go">Start playing <Arrow width={18} height={18} /></span>
+          </Link>
+        </div>
+      </section>
+
+      <section className="sec">
         <p className="eyebrow">The method</p>
         <h2 className="h-sec" style={{ marginTop: 16, maxWidth: '14em' }}>Built the opposite of a gamified app.</h2>
         <div className="method">

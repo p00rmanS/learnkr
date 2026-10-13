@@ -21,7 +21,7 @@ export type Step =
 
 export interface Lesson {
   id: string;
-  phase: 0 | 1 | 2 | 3 | 4;
+  phase: 0 | 1 | 2 | 3 | 4 | 5;
   title: string;
   ko: string;
   blurb: string;
@@ -417,6 +417,7 @@ import { MORE3, UPCOMING3 } from './lessons-phase2';
 import { EVERYDAY } from './lessons-everyday';
 import { DAILY, LEVELUP } from './lessons-daily';
 import { EXTRA3, LEVELUP2 } from './lessons-more3';
+import { KIDS } from './lessons-kids';
 
 export const UPCOMING = [...UP1, ...UPCOMING2, ...UPCOMING3];
 
@@ -438,3 +439,8 @@ export const LESSONS: Lesson[] = [
   ...LEVELUP,
   ...LEVELUP2,
 ];
+
+export { KIDS };
+
+/** Every lesson, including the Kids track. */
+export const ALL_LESSONS: Lesson[] = [...LESSONS, ...KIDS];

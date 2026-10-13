@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Arrow, Speaker } from '../components/Icons';
-import { LESSONS } from '../content/lessons';
+import { Say } from '../components/Say';
+import { ITEMS } from '../content/allItems';
 import { db, type ReviewCard } from '../lib/db';
 import { getCardsDue, scheduleCard, type Feedback } from '../lib/srs';
 import { speakKorean } from '../lib/speech';
-
-const ITEMS = new Map(LESSONS.flatMap((l) => l.items).map((i) => [i.id, i]));
 
 export function Review() {
   const [queue, setQueue] = useState<ReviewCard[] | null>(null);
@@ -61,6 +60,7 @@ export function Review() {
           </div>
           <div className="face back">
             <div className="ans">{item.english}</div>
+            <Say text={item.korean} />
             <span className="hint">{item.korean}</span>
           </div>
         </div>

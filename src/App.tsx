@@ -9,12 +9,15 @@ import { LessonPlayer } from './pages/LessonPlayer';
 import { Letters } from './pages/Letters';
 import { Build } from './pages/Build';
 import { Review } from './pages/Review';
+import { StoryList, StoryReader } from './pages/Stories';
+import { Kids } from './pages/Kids';
 
 const NAV = [
   { to: '/', label: 'Home', end: true },
   { to: '/learn', label: 'Road' },
+  { to: '/stories', label: 'Stories' },
+  { to: '/kids', label: 'Kids' },
   { to: '/hangul', label: 'Letters' },
-  { to: '/syllables', label: 'Build' },
   { to: '/review', label: 'Review' },
 ];
 
@@ -76,6 +79,9 @@ function Shell() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/learn" element={<Path />} />
+            <Route path="/stories" element={<StoryList />} />
+            <Route path="/stories/:id" element={<StoryReader />} />
+            <Route path="/kids" element={<Kids />} />
             <Route path="/hangul" element={<Letters />} />
             <Route path="/syllables" element={<Build />} />
             <Route path="/review" element={<Review />} />

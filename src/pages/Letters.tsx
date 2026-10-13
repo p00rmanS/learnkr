@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Speaker } from '../components/Icons';
+import { Link } from 'react-router-dom';
+import { Arrow, Speaker } from '../components/Icons';
 import { GROUP_LABEL, LETTERS, sayable, type Letter, type LetterGroup } from '../content/letters';
 import { speakKorean } from '../lib/speech';
 
@@ -19,6 +20,7 @@ export function Letters() {
       <p className="eyebrow">Reference</p>
       <h1 className="h-page" style={{ marginTop: 18 }}>Every letter, <em>one tap</em> away.</h1>
       <p className="lede">Tap a letter to hear it and see why it looks the way it does. Vowels are blue, consonants are red.</p>
+      <div style={{ marginTop: 24 }}><Link to="/syllables" className="btn ghost sm">Build your own syllable <Arrow width={16} height={16} /></Link></div>
 
       <div className="letters">
         <div>
