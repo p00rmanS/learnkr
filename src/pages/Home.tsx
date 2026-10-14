@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Assemble } from '../components/Assemble';
 import { Arrow } from '../components/Icons';
-import { LESSONS } from '../content/lessons';
+import { KIDS, LESSONS } from '../content/lessons';
+import { STORIES } from '../content/stories';
 import { db } from '../lib/db';
 import { getCardsDue } from '../lib/srs';
 import { useAppStore } from '../store';
@@ -151,13 +152,13 @@ export function Home() {
         <p className="eyebrow">Read and play</p>
         <div className="duo">
           <Link to="/stories" className="duo-card">
-            <span className="lab">8 stories</span>
+            <span className="lab">{STORIES.length} stories</span>
             <h3>Read along</h3>
             <p>Short dialogues, diaries and fables. Every line has sound, a say-it guide, romanization and English.</p>
             <span className="duo-go">Open stories <Arrow width={18} height={18} /></span>
           </Link>
           <Link to="/kids" className="duo-card kid" data-phase="5">
-            <span className="lab">14 lessons</span>
+            <span className="lab">{KIDS.length} lessons</span>
             <h3>Kids track</h3>
             <p>Taught like kindergarten: picture alphabet, animal sounds, counting rhymes, colors and body parts.</p>
             <span className="duo-go">Start playing <Arrow width={18} height={18} /></span>
@@ -219,6 +220,12 @@ export function Home() {
 
       <footer className="foot">
         <span className="kr" style={{ fontWeight: 900, color: 'var(--text)' }}>한글길</span>
+        <span className="foot-links">
+          <Link to="/hangul">Letters</Link>
+          <Link to="/syllables">Build a syllable</Link>
+          <Link to="/phrases">Phrasebook</Link>
+          <Link to="/settings">Settings and backup</Link>
+        </span>
         <span>Progress is saved on this device. Nothing leaves your browser.</span>
       </footer>
     </div>

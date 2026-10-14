@@ -6,29 +6,9 @@ import { STORIES, type Story } from '../content/stories';
 import { romanize, sayIt } from '../lib/pronounce';
 import { cancelSpeech, koreanVoiceAvailable, speakAndWait, speakKorean } from '../lib/speech';
 import { useAppStore } from '../store';
+import { usePrefs } from '../store/prefs';
 
 const LEVEL_COLOR: Record<Story['level'], string> = { Starter: 'var(--jade)', Easy: 'var(--gold)', Medium: 'var(--red)' };
-
-function usePref(key: string, initial: boolean): [boolean, () => void] {
-  const [v, setV] = useState<boolean>(() => {
-    try {
-      const s = localStorage.getItem(key);
-      return s === null ? initial : s === '1';
-    } catch {
-      return initial;
-    }
-  });
-  const toggle = () =>
-    setV((x) => {
-      try {
-        localStorage.setItem(key, x ? '0' : '1');
-      } catch {
-        /* storage unavailable */
-      }
-      return !x;
-    });
-  return [v, toggle];
-}
 
 export function StoryList() {
   const completed = useAppStore((s) => s.progress.completedLessons);
@@ -65,10 +45,7 @@ export function StoryReader() {
   const story = STORIES.find((s) => s.id === id);
   const completed = useAppStore((s) => s.progress.completedLessons);
   const completeLesson = useAppStore((s) => s.completeLesson);
-  const [showSay, toggleSay] = usePref('story.say', true);
-  const [showRom, toggleRom] = usePref('story.rom', true);
-  const [showEn, toggleEn] = usePref('story.en', true);
-  const [slow, setSlow] = useState(false);
+  const { say: showSay, rom: showRom, en: showEn, slow, toggle } = usePrefs();
   const [playing, setPlaying] = useState(false);
   const [active, setActive] = useState<number | null>(null);
   const [noVoice, setNoVoice] = useState(false);
@@ -129,10 +106,10 @@ export function StoryReader() {
       <div className="reader-bar">
         <button type="button" className="btn sm" onClick={playAll}>{playing ? 'Stop' : 'Play whole story'}</button>
         <div className="toggles" role="group" aria-label="Show or hide">
-          <button type="button" className={`tog ${showSay ? 'on' : ''}`} aria-pressed={showSay} onClick={toggleSay}>Say it</button>
-          <button type="button" className={`tog ${showRom ? 'on' : ''}`} aria-pressed={showRom} onClick={toggleRom}>Romanization</button>
-          <button type="button" className={`tog ${showEn ? 'on' : ''}`} aria-pressed={showEn} onClick={toggleEn}>English</button>
-          <button type="button" className={`tog ${slow ? 'on' : ''}`} aria-pressed={slow} onClick={() => setSlow((s) => !s)}>Slow audio</button>
+          <button type="button" className={`tog ${showSay ? 'on' : ''}`} aria-pressed={showSay} onClick={() => toggle('say')}>Say it</button>
+          <button type="button" className={`tog ${showRom ? 'on' : ''}`} aria-pressed={showRom} onClick={() => toggle('rom')}>Romanization</button>
+          <button type="button" className={`tog ${showEn ? 'on' : ''}`} aria-pressed={showEn} onClick={() => toggle('en')}>English</button>
+          <button type="button" className={`tog ${slow ? 'on' : ''}`} aria-pressed={slow} onClick={() => toggle('slow')}>Slow audio</button>
         </div>
       </div>
 

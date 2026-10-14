@@ -20,6 +20,23 @@ export function Review() {
     }).catch(() => setQueue([]));
   }, []);
 
+  const card0 = queue?.[0];
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!card0 || e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = e.target as HTMLElement;
+      if (el.tagName === 'BUTTON' || el.tagName === 'A') return;
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        setShown((x) => !x);
+      } else if (shown && /^[1-4]$/.test(e.key)) {
+        document.querySelectorAll<HTMLButtonElement>('.grade')[Number(e.key) - 1]?.click();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [card0, shown]);
+
   if (queue === null) return <div className="page" />;
 
   if (queue.length === 0) {

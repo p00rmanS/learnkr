@@ -7,6 +7,7 @@ import { ALL_LESSONS, type Step } from '../content/lessons';
 import { composeSyllable } from '../lib/hangul';
 import { koreanVoiceAvailable, speakKorean } from '../lib/speech';
 import { useAppStore } from '../store';
+import { usePrefs } from '../store/prefs';
 
 const BURST = ['var(--red)', 'var(--blue)', 'var(--gold)', 'var(--jade)'];
 type Speak = (t: string) => void;
@@ -80,7 +81,7 @@ function Teach({ step, onNext, speak }: { step: Extract<Step, { kind: 'teach' }>
           </div>
         )}
       </div>
-      <div className="actionbar"><div className="in"><span /><button className="btn ph" type="button" onClick={onNext}>Continue <Arrow /></button></div></div>
+      <div className="actionbar"><div className="in"><span className="kbd-hint">Press <kbd>Enter</kbd> to continue</span><button className="btn ph" type="button" onClick={onNext}>Continue <Arrow /></button></div></div>
     </>
   );
 }
@@ -176,11 +177,32 @@ export function LessonPlayer() {
   const completeLesson = useAppStore((s) => s.completeLesson);
   const [i, setI] = useState(0);
   const [finished, setFinished] = useState(false);
-  const [slow, setSlow] = useState(false);
+  const slow = usePrefs((s) => s.slow);
+  const togglePref = usePrefs((s) => s.toggle);
   const [noVoice, setNoVoice] = useState(false);
 
   useEffect(() => {
     koreanVoiceAvailable().then((ok) => setNoVoice(!ok));
+  }, []);
+
+  // Keyboard: Enter continues, 1-9 picks an answer
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement;
+      if (e.metaKey || e.ctrlKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (e.key === 'Enter' && el.tagName !== 'BUTTON' && el.tagName !== 'A') {
+        const go = document.querySelector<HTMLButtonElement>('.actionbar .btn:not([disabled])');
+        if (go) {
+          e.preventDefault();
+          go.click();
+        }
+      } else if (/^[1-9]$/.test(e.key)) {
+        const opt = document.querySelectorAll<HTMLButtonElement>('.opt')[Number(e.key) - 1];
+        if (opt && !opt.disabled) opt.click();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
   const speak: Speak = (t) => {
@@ -216,7 +238,7 @@ export function LessonPlayer() {
         <div className="segs" role="progressbar" aria-valuemin={0} aria-valuemax={lesson.steps.length} aria-valuenow={finished ? lesson.steps.length : i}>
           {lesson.steps.map((_, n) => <i key={n} className={finished || n <= i ? 'on' : ''} />)}
         </div>
-        <button type="button" className={`speed ${slow ? 'on' : ''}`} aria-pressed={slow} onClick={() => setSlow((s) => !s)} title="Play audio more slowly">
+        <button type="button" className={`speed ${slow ? 'on' : ''}`} aria-pressed={slow} onClick={() => togglePref('slow')} title="Play audio more slowly">
           {slow ? 'Slow' : '1×'}
         </button>
         <span className="lesson-id">{lesson.id}</span>
