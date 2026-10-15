@@ -6,11 +6,17 @@ import { ITEMS } from '../content/allItems';
 import { db, type ReviewCard } from '../lib/db';
 import { getCardsDue, scheduleCard, type Feedback } from '../lib/srs';
 import { speakKorean } from '../lib/speech';
+import { useAppStore } from '../store';
+import { Flame } from '../components/Growth';
+import { REVIEW_XP } from '../lib/growth';
 
 export function Review() {
   const [queue, setQueue] = useState<ReviewCard[] | null>(null);
   const [shown, setShown] = useState(false);
   const [total, setTotal] = useState(0);
+  const awardReview = useAppStore((s) => s.awardReview);
+  const streakNow = useAppStore((s) => s.progress.bestStreak);
+  const [session, setSession] = useState({ xp: 0, again: 0, done: 0 });
 
   useEffect(() => {
     db.reviewCards.toArray().then((all) => {
@@ -45,6 +51,13 @@ export function Review() {
         <p className="eyebrow">Review</p>
         <h1 className="h-page" style={{ marginTop: 18 }}>{total > 0 ? <>다 했어요. <em>All done.</em></> : <>Nothing to <em>review</em> yet.</>}</h1>
         <p className="lede">{total > 0 ? 'Cards come back when you are about to forget them. See you later.' : 'Finish a lesson and its cards will land here.'}</p>
+        {total > 0 && (
+          <div className="reward-cards" style={{ marginTop: 28 }}>
+            <div className="rw xp"><b>+{session.xp}</b><span>XP earned</span></div>
+            <div className="rw"><b>{session.done}</b><span>cards reviewed</span></div>
+            <div className="rw"><Flame size={26} /><b>{streakNow}</b><span>best streak</span></div>
+          </div>
+        )}
         <div style={{ marginTop: 32 }}><Link to="/learn" className="btn">{total > 0 ? 'Back to the road' : 'Start a lesson'} <Arrow /></Link></div>
       </div>
     );
@@ -57,6 +70,8 @@ export function Review() {
   const grade = async (f: Feedback) => {
     const updated = scheduleCard(card, f);
     await db.reviewCards.put(updated);
+    awardReview(f);
+    setSession((x) => ({ xp: x.xp + REVIEW_XP[f], again: x.again + (f === 'again' ? 1 : 0), done: x.done + 1 }));
     // "again" stays in this session; everything else leaves it
     setQueue(f === 'again' ? [...queue.slice(1), updated] : queue.slice(1));
     setShown(false);

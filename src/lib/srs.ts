@@ -1,4 +1,5 @@
 import type { ReviewCard } from './db';
+import { localDate } from './dates';
 
 const MIN_EASE = 1.3;
 const INITIAL_EASE = 2.5;
@@ -43,7 +44,7 @@ export function scheduleCard(card: ReviewCard, feedback: Feedback): ReviewCard {
 
   const nextDue = new Date();
   nextDue.setDate(nextDue.getDate() + intervalDays);
-  const dueDateStr = nextDue.toISOString().split('T')[0];
+  const dueDateStr = localDate(nextDue);
 
   return {
     ...card,
@@ -56,12 +57,12 @@ export function scheduleCard(card: ReviewCard, feedback: Feedback): ReviewCard {
 }
 
 export function getCardsDue(cards: ReviewCard[]): ReviewCard[] {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDate();
   return cards.filter((card) => card.dueDate <= today);
 }
 
 export function createNewCard(itemId: string, direction: 'ko-en' | 'en-ko' | 'audio-ko'): ReviewCard {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDate();
   return {
     itemId,
     direction,

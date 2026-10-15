@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Assemble } from '../components/Assemble';
-import { Arrow } from '../components/Icons';
+import { Flame, Ring } from '../components/Growth';
+import { Arrow, Check } from '../components/Icons';
 import { KIDS, LESSONS } from '../content/lessons';
 import { STORIES } from '../content/stories';
+import { addDays, localDate, parseDate } from '../lib/dates';
 import { db } from '../lib/db';
+import { levelFor, streakInfo, xpToday } from '../lib/growth';
 import { getCardsDue } from '../lib/srs';
 import { useAppStore } from '../store';
 
@@ -23,17 +26,11 @@ const PHASES = [
   { n: 0, title: 'Hangul', ko: '한글', desc: 'Read every letter and real words within days.' },
   { n: 1, title: 'Survival Korean', ko: '생존 한국어', desc: 'Greetings, numbers, ordering and asking for things.' },
   { n: 2, title: 'Building Sentences', ko: '문장 만들기', desc: 'Particles, tenses, wants, plans and abilities.' },
-  { n: 3, title: 'Real Conversations', ko: '실전 대화', desc: 'Restaurants, shops, the subway, family, weather, health and fillers.' },
-  { n: 4, title: 'Level Up', ko: '더 멀리', desc: 'Polite commands, reasons, conditions, question words and natural adverbs.' },
+  { n: 3, title: 'Real Conversations', ko: '실전 대화', desc: 'Restaurants, shops, the subway, family, health and fillers.' },
+  { n: 4, title: 'Level Up', ko: '더 멀리', desc: 'Irregular verbs, reasons, must, may, modifiers and speech levels.' },
 ];
 
-function lastDays(n: number): string[] {
-  return Array.from({ length: n }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - (n - 1 - i));
-    return d.toISOString().split('T')[0];
-  });
-}
+const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export function Home() {
   const progress = useAppStore((s) => s.progress);
@@ -42,7 +39,7 @@ export function Home() {
 
   useEffect(() => {
     db.reviewCards.toArray().then((c) => setDue(getCardsDue(c).length)).catch(() => setDue(0));
-  }, [progress.completedLessons.length]);
+  }, [progress.completedLessons.length, progress.reviewCount]);
 
   useEffect(() => {
     const t = setInterval(() => setWi((i) => (i + 1) % WORDS.length), 4200);
@@ -50,16 +47,19 @@ export function Home() {
   }, []);
 
   const phrases = useMemo(
-    () => LESSONS.filter((l) => l.phase >= 1).flatMap((l) => l.items).filter((i) => i.korean.length > 2 && i.english.length < 34).filter((_, n) => n % 3 === 0).slice(0, 26),
+    () => LESSONS.filter((l) => l.phase >= 1).flatMap((l) => l.items).filter((i) => i.korean.length > 2 && i.english.length < 34).filter((_, n) => n % 4 === 0).slice(0, 26),
     [],
   );
 
-  const done = progress.completedLessons.length;
+  const done = progress.completedLessons.filter((id) => LESSONS.some((l) => l.id === id)).length;
   const total = LESSONS.length;
   const next = LESSONS.find((l) => !progress.completedLessons.includes(l.id));
-  const days = lastDays(14);
-  const today = days[days.length - 1];
-  const C = 2 * Math.PI * 49;
+  const today = localDate();
+  const week = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6));
+  const streak = streakInfo(progress);
+  const lvl = levelFor(progress.xp);
+  const todayXp = xpToday(progress);
+  const goalPct = todayXp / progress.dailyGoal;
   const w = WORDS[wi];
 
   return (
@@ -71,7 +71,7 @@ export function Home() {
             Korean,<br /><em>stroke</em> by stroke.
           </h1>
           <p className="lede">
-            Hangul was designed on purpose. See how the letters lock together, understand why, then speak it. Explained in plain English and Taglish, with no streaks and no guilt.
+            Hangul was designed on purpose. See how the letters lock together, understand why, then speak it. Explained in plain English and Taglish, with streaks that forgive you.
           </p>
           <div className="row" style={{ marginTop: 34 }}>
             <Link to={next ? `/learn/${next.id}` : '/learn'} className="btn">
@@ -122,29 +122,46 @@ export function Home() {
             <div className="lab">Cards ready to review</div>
             <div className="big-n" style={{ marginTop: 14 }}>{due}</div>
             <p style={{ color: 'var(--muted)', marginTop: 12, maxWidth: '22em' }}>
-              Spaced repetition brings back what you are about to forget, so you never decide what to review.
+              Each card you review earns XP and keeps your streak going.
             </p>
             <Link to="/review" className="btn ghost sm" style={{ marginTop: 20 }}>{due ? 'Start review' : 'Open review'}</Link>
           </div>
 
-          <div className="cell c-ring">
-            <svg className="ring" viewBox="0 0 118 118" role="img" aria-label={`${done} of ${total} lessons`}>
-              <circle className="bg" cx="59" cy="59" r="49" />
-              <circle className="fg" cx="59" cy="59" r="49" strokeDasharray={C} strokeDashoffset={C * (1 - done / total)} />
-            </svg>
-            <div>
-              <div className="big-n" style={{ fontSize: 56 }}>{done}<span style={{ color: 'var(--dim)', fontSize: 28 }}>/{total}</span></div>
-              <div className="lab" style={{ marginTop: 8 }}>Lessons done</div>
+          <Link to="/progress" className="cell c-goal">
+            <div className="lab">Daily goal</div>
+            <div className="goal-mini">
+              <Ring pct={goalPct} size={104} stroke={9} color={goalPct >= 1 ? 'var(--jade)' : 'var(--gold)'}>
+                {goalPct >= 1 ? <Check width={34} height={34} strokeWidth={2.6} style={{ color: 'var(--jade)' }} /> : <><b>{todayXp}</b><span>/ {progress.dailyGoal}</span></>}
+              </Ring>
+              <p className="g-sub">{goalPct >= 1 ? 'Goal reached. Anything more is a bonus.' : `${progress.dailyGoal - todayXp} XP to go. One lesson is about 25.`}</p>
             </div>
-          </div>
+          </Link>
 
-          <div className="cell c-days">
-            <div className="lab">Last 14 days</div>
-            <div className="days" role="img" aria-label={`${progress.studyDays.length} days studied`}>
-              {days.map((d) => <div key={d} title={d} className={`day ${progress.studyDays.includes(d) ? 'on' : ''} ${d === today ? 'today' : ''}`} />)}
+          <Link to="/progress" className={`cell c-streak ${streak.current ? 'on' : ''}`}>
+            <div className="lab">Streak</div>
+            <div className="streak-row">
+              <Flame size={52} lit={streak.current > 0} />
+              <div><div className="big-n" style={{ fontSize: 64 }}>{streak.current}</div><div className="lab">{streak.current === 1 ? 'day' : 'days'}</div></div>
             </div>
-            <p style={{ color: 'var(--muted)', marginTop: 16, fontSize: 15 }}>Lit squares are days you studied. Dark ones cost you nothing. No streak to protect.</p>
-          </div>
+            <div className="week-dots small">
+              {week.map((d) => (
+                <div key={d} className={`wd ${progress.studyDays.includes(d) ? 'on' : ''} ${progress.frozenDays.includes(d) ? 'ice' : ''} ${d === today ? 'today' : ''}`}>
+                  <span>{DOW[parseDate(d).getDay()]}</span><i />
+                </div>
+              ))}
+            </div>
+            <p className="g-sub">{streak.current === 0 ? 'Finish a lesson to light your first day.' : streak.atRisk ? 'Study today to keep it going.' : 'Nice. Today is logged.'}</p>
+          </Link>
+
+          <Link to="/progress" className="cell c-level">
+            <div className="lab">Level</div>
+            <div className="lvl-row">
+              <div className="big-n" style={{ fontSize: 64 }}>{lvl.level}</div>
+              <div><div className="lvl-ko kr">{lvl.ko}</div><div className="lab">{lvl.title}</div></div>
+            </div>
+            <div className="xpbar"><i style={{ width: `${lvl.pct}%` }} /></div>
+            <p className="g-sub">{lvl.into} / {lvl.need} XP · {done}/{total} lessons</p>
+          </Link>
         </div>
       </section>
 
@@ -168,7 +185,7 @@ export function Home() {
 
       <section className="sec">
         <p className="eyebrow">The method</p>
-        <h2 className="h-sec" style={{ marginTop: 16, maxWidth: '14em' }}>Built the opposite of a gamified app.</h2>
+        <h2 className="h-sec" style={{ marginTop: 16, maxWidth: '14em' }}>Habit tools without the guilt.</h2>
         <div className="method">
           <div className="m-card">
             <span className="m-num">01</span>
@@ -178,15 +195,15 @@ export function Home() {
           </div>
           <div className="m-card">
             <span className="m-num">02</span>
-            <h3>Taglish, for real</h3>
-            <p>Hard parts are re-explained in the way Filipino learners actually think, with comparisons to Tagalog that make grammar click.</p>
-            <div className="m-demo"><span className="pill on">이 / 그 / 저 = ito / iyan / iyon</span></div>
+            <h3>Streaks that forgive</h3>
+            <p>No hearts and no lost progress. Earn rest-day shields every week and your streak survives a missed day.</p>
+            <div className="m-demo"><span className="pill on">XP</span><span className="pill on">Daily goal</span><span className="pill on">Shields</span><span className="pill on">Badges</span></div>
           </div>
           <div className="m-card">
             <span className="m-num">03</span>
-            <h3>A memory hook on every idea</h3>
-            <p>A pro tip and a way to remember, attached to each concept, so the lesson sticks past tonight.</p>
-            <div className="m-demo"><span className="pill on">Pro tip</span><span className="pill on">Paano tandaan</span></div>
+            <h3>Taglish, for real</h3>
+            <p>Hard parts are re-explained the way Filipino learners think, with comparisons to Tagalog that make grammar click.</p>
+            <div className="m-demo"><span className="pill on">이 / 그 / 저 = ito / iyan / iyon</span></div>
           </div>
           <div className="m-card">
             <span className="m-num">04</span>
@@ -224,6 +241,7 @@ export function Home() {
           <Link to="/hangul">Letters</Link>
           <Link to="/syllables">Build a syllable</Link>
           <Link to="/phrases">Phrasebook</Link>
+          <Link to="/progress">Progress</Link>
           <Link to="/settings">Settings and backup</Link>
         </span>
         <span>Progress is saved on this device. Nothing leaves your browser.</span>

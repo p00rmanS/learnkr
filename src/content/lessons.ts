@@ -419,6 +419,7 @@ import { DAILY, LEVELUP } from './lessons-daily';
 import { EXTRA3, LEVELUP2 } from './lessons-more3';
 import { KIDS } from './lessons-kids';
 import { EXTRA4, LEVELUP3 } from './lessons-more4';
+import { EXTRA5, LEVELUP4 } from './lessons-more5';
 
 export const UPCOMING = [...UP1, ...UPCOMING2, ...UPCOMING3];
 
@@ -438,9 +439,11 @@ export const LESSONS: Lesson[] = [
   ...DAILY,
   ...EXTRA3,
   ...EXTRA4,
+  ...EXTRA5,
   ...LEVELUP,
   ...LEVELUP2,
   ...LEVELUP3,
+  ...LEVELUP4,
 ];
 
 export { KIDS };

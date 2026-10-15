@@ -14,6 +14,9 @@ import { Kids } from './pages/Kids';
 import { Phrasebook } from './pages/Phrasebook';
 import { Settings } from './pages/Settings';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { StreakChip } from './components/Growth';
+import { Progress as ProgressPage } from './pages/Progress';
+import { applyShields, normalize } from './lib/growth';
 
 const NAV = [
   { to: '/', label: 'Home', end: true },
@@ -35,6 +38,7 @@ const TITLES: [string, string][] = [
   ['/phrases', 'Phrasebook'],
   ['/review', 'Review'],
   ['/settings', 'Settings'],
+  ['/progress', 'Progress'],
 ];
 
 function Shell() {
@@ -48,11 +52,16 @@ function Shell() {
     (async () => {
       try {
         const saved = await db.progress.toCollection().first();
-        if (saved) setProgress(saved);
-        else {
-          const base = useAppStore.getState().progress;
-          const id = await db.progress.add(base);
-          setProgress({ ...base, id });
+        if (saved) {
+          // bring older saves up to date, then let rest-day shields cover any missed days
+          const fixed = applyShields(normalize(saved));
+          setProgress(fixed);
+          if (JSON.stringify(fixed) !== JSON.stringify(saved)) await db.progress.put(fixed);
+        } else {
+          // a fixed id keeps this idempotent even if startup runs twice (React StrictMode in dev)
+          const base = { ...useAppStore.getState().progress, id: 1 };
+          await db.progress.put(base);
+          setProgress(base);
         }
       } catch (e) {
         console.error('Failed to load progress', e);
@@ -77,6 +86,7 @@ function Shell() {
 
   return (
     <>
+      {!inLesson && <StreakChip />}
       {!inLesson && (
         <header className="topbar">
           <NavLink to="/" className="logo"><i />한글길</NavLink>
@@ -109,6 +119,7 @@ function Shell() {
             <Route path="/review" element={<Review />} />
             <Route path="/phrases" element={<Phrasebook />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/progress" element={<ProgressPage />} />
             <Route path="*" element={<Home />} />
           </Routes>
           </ErrorBoundary>

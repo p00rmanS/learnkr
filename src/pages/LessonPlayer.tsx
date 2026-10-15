@@ -7,6 +7,9 @@ import { ALL_LESSONS, type Step } from '../content/lessons';
 import { composeSyllable } from '../lib/hangul';
 import { koreanVoiceAvailable, speakKorean } from '../lib/speech';
 import { useAppStore } from '../store';
+import type { Summary } from '../lib/growth';
+import { Flame, Ring } from '../components/Growth';
+import { BADGES, levelFor } from '../lib/growth';
 import { usePrefs } from '../store/prefs';
 
 const BURST = ['var(--red)', 'var(--blue)', 'var(--gold)', 'var(--jade)'];
@@ -101,7 +104,7 @@ function Feedback({ ok, why, whyTl, onNext, extra }: { ok: boolean; why: string;
   );
 }
 
-function Choice({ step, onNext, speak }: { step: Extract<Step, { kind: 'choice' }>; onNext: () => void; speak: Speak }) {
+function Choice({ step, onNext, speak, onAnswer }: { step: Extract<Step, { kind: 'choice' }>; onNext: () => void; speak: Speak; onAnswer: (ok: boolean) => void }) {
   const [picked, setPicked] = useState<string | null>(null);
   const textual = step.options.some((o) => o.length > 3);
   return (
@@ -124,7 +127,7 @@ function Choice({ step, onNext, speak }: { step: Extract<Step, { kind: 'choice' 
           {step.options.map((o) => {
             const state = picked === null ? '' : o === step.answer ? 'right' : o === picked ? 'wrong' : '';
             return (
-              <button key={o} type="button" className={`opt ${textual ? 'text' : ''} ${state}`} disabled={picked !== null} onClick={() => setPicked(o)}>{o}</button>
+              <button key={o} type="button" className={`opt ${textual ? 'text' : ''} ${state}`} disabled={picked !== null} onClick={() => { setPicked(o); onAnswer(o === step.answer); }}>{o}</button>
             );
           })}
         </div>
@@ -134,7 +137,7 @@ function Choice({ step, onNext, speak }: { step: Extract<Step, { kind: 'choice' 
   );
 }
 
-function Build({ step, onNext, speak }: { step: Extract<Step, { kind: 'build' }>; onNext: () => void; speak: Speak }) {
+function Build({ step, onNext, speak, onAnswer }: { step: Extract<Step, { kind: 'build' }>; onNext: () => void; speak: Speak; onAnswer: (ok: boolean) => void }) {
   const [ini, setIni] = useState('');
   const [vow, setVow] = useState('');
   const [fin, setFin] = useState('');
@@ -162,11 +165,44 @@ function Build({ step, onNext, speak }: { step: Extract<Step, { kind: 'build' }>
         </div>
       </div>
       {!checked ? (
-        <div className="actionbar"><div className="in"><span /><button className="btn ph" type="button" disabled={!made} onClick={() => setChecked(true)}>Check <Arrow /></button></div></div>
+        <div className="actionbar"><div className="in"><span /><button className="btn ph" type="button" disabled={!made} onClick={() => { setChecked(true); onAnswer(made === step.target); }}>Check <Arrow /></button></div></div>
       ) : (
         <Feedback ok={ok} why={step.why} whyTl={step.whyTl} onNext={onNext} extra={`Not quite. You built ${made}.`} />
       )}
     </>
+  );
+}
+
+function Rewards({ summary, goal, xpTotal }: { summary: Summary | null; goal: { dailyGoal: number; xpByDay: Record<string, number> }; xpTotal: number }) {
+  if (!summary) return <div className="rewards"><span className="lab">Saving your progress...</span></div>;
+  const today = Object.keys(goal.xpByDay).sort().at(-1);
+  const todayXp = today ? goal.xpByDay[today] : 0;
+  const lvl = levelFor(xpTotal);
+  return (
+    <div className="rewards">
+      <div className="reward-cards">
+        <div className="rw xp"><b>+{summary.xp}</b><span>XP{summary.repeat ? ' (repeat, half)' : summary.perfect ? ' (flawless bonus)' : ''}</span></div>
+        <div className={`rw streak ${summary.streakExtended ? 'up' : ''}`}>
+          <Flame size={30} lit={summary.streakAfter > 0} />
+          <b>{summary.streakAfter}</b>
+          <span>{summary.streakExtended ? 'day streak, extended' : summary.streakAfter ? 'day streak' : 'streak'}</span>
+        </div>
+        <div className="rw goal">
+          <Ring pct={todayXp / goal.dailyGoal} size={64} stroke={7} color={todayXp >= goal.dailyGoal ? 'var(--jade)' : 'var(--gold)'}><small>{Math.min(100, Math.round((todayXp / goal.dailyGoal) * 100))}%</small></Ring>
+          <span>{summary.goalReached ? 'Daily goal reached' : todayXp >= goal.dailyGoal ? 'Goal done today' : `${goal.dailyGoal - todayXp} XP to goal`}</span>
+        </div>
+      </div>
+      {summary.levelUp && <div className="banner up">Level {summary.level}: {lvl.ko} <span>{lvl.title}</span></div>}
+      {summary.shieldEarned && <div className="banner shield">You earned a rest-day shield. It will protect your streak if you miss a day.</div>}
+      {summary.newBadges.length > 0 && (
+        <div className="new-badges">
+          {summary.newBadges.map((id) => {
+            const b = BADGES.find((x) => x.id === id)!;
+            return <div key={id} className="nb" style={{ ['--tone' as string]: `var(--${b.tone === 'pink' ? 'pink' : b.tone})` }}><i className="kr">{b.glyph}</i><span><b>{b.name}</b><small>{b.desc}</small></span></div>;
+          })}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -177,6 +213,9 @@ export function LessonPlayer() {
   const completeLesson = useAppStore((s) => s.completeLesson);
   const [i, setI] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [stats, setStats] = useState({ correct: 0, mistakes: 0 });
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const answer = (ok: boolean) => setStats((s) => ({ correct: s.correct + (ok ? 1 : 0), mistakes: s.mistakes + (ok ? 0 : 1) }));
   const slow = usePrefs((s) => s.slow);
   const togglePref = usePrefs((s) => s.toggle);
   const [noVoice, setNoVoice] = useState(false);
@@ -217,12 +256,14 @@ export function LessonPlayer() {
     );
   }
 
+  const goal = useAppStore.getState().progress;
+  const xpTotal = goal.xp;
   const isKids = lesson.phase === 5;
   const home = isKids ? '/kids' : '/learn';
   const step = lesson.steps[i];
   const next = () => {
     if (i + 1 >= lesson.steps.length) {
-      completeLesson(lesson.id, lesson.items);
+      completeLesson(lesson.id, lesson.items, stats).then(setSummary);
       setFinished(true);
     } else {
       setI(i + 1);
@@ -244,7 +285,7 @@ export function LessonPlayer() {
         <span className="lesson-id">{lesson.id}</span>
       </div>
 
-      {noVoice && (
+      {noVoice && !finished && (
         <div className="voice-note" role="alert">
           No Korean voice found on this device, so audio may be silent. Try Chrome or Edge, or add a Korean voice in your system settings.
           <button type="button" onClick={() => setNoVoice(false)} aria-label="Dismiss"><Close width={16} height={16} /></button>
@@ -261,10 +302,11 @@ export function LessonPlayer() {
               </div>
               <span className="tag" style={{ fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ph)' }}>Lesson {lesson.id} complete</span>
               <h1 className="h-page" style={{ marginTop: 14 }}>잘했어요. <em>Well done.</em></h1>
+              <Rewards summary={summary} goal={goal} xpTotal={xpTotal} />
               <p className="lede" style={{ margin: '18px auto 0' }}>{lesson.items.length} cards joined your review pile. They return when you are about to forget them.</p>
               <div className="row" style={{ marginTop: 34, justifyContent: 'center' }}>
                 {following ? (
-                  <button className="btn ph" type="button" onClick={() => { setI(0); setFinished(false); nav(`/learn/${following.id}`); }}>Next: {following.title} <Arrow /></button>
+                  <button className="btn ph" type="button" onClick={() => { setI(0); setFinished(false); setStats({ correct: 0, mistakes: 0 }); setSummary(null); nav(`/learn/${following.id}`); }}>Next: {following.title} <Arrow /></button>
                 ) : (
                   <Link className="btn ph" to={home}>{isKids ? 'Back to Kids' : 'Back to the road'}</Link>
                 )}
@@ -275,8 +317,8 @@ export function LessonPlayer() {
         ) : (
           <div key={`${lesson.id}-${i}`}>
             {step.kind === 'teach' && <Teach step={step} onNext={next} speak={speak} />}
-            {step.kind === 'choice' && <Choice step={step} onNext={next} speak={speak} />}
-            {step.kind === 'build' && <Build step={step} onNext={next} speak={speak} />}
+            {step.kind === 'choice' && <Choice step={step} onNext={next} speak={speak} onAnswer={answer} />}
+            {step.kind === 'build' && <Build step={step} onNext={next} speak={speak} onAnswer={answer} />}
           </div>
         )}
       </div>

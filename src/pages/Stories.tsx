@@ -49,6 +49,7 @@ export function StoryReader() {
   const [playing, setPlaying] = useState(false);
   const [active, setActive] = useState<number | null>(null);
   const [noVoice, setNoVoice] = useState(false);
+  const [gain, setGain] = useState<number | null>(null);
   const stop = useRef(false);
 
   useEffect(() => {
@@ -156,10 +157,11 @@ export function StoryReader() {
         </div>
 
         <div className="row" style={{ marginTop: 34 }}>
-          <button type="button" className="btn" disabled={done} onClick={() => completeLesson(`story.${story.id}`, storyItems(story.id))}>
+          <button type="button" className="btn" disabled={done} onClick={() => completeLesson(`story.${story.id}`, storyItems(story.id), { flatXp: 15 }).then((r) => setGain(r.xp))}>
             {done ? 'Added to review' : 'Add these words to review'} {done ? <Check width={18} height={18} /> : <Arrow />}
           </button>
           <Link to="/stories" className="btn ghost">More stories</Link>
+          {gain !== null && <span className="gain">+{gain} XP</span>}
         </div>
       </div>
     </div>

@@ -58,6 +58,20 @@ export interface Progress {
     showRomanization: boolean;
     dailyNewItemLimit: number;
   };
+  /** Total experience points */
+  xp: number;
+  /** XP earned per local calendar day, YYYY-MM-DD */
+  xpByDay: Record<string, number>;
+  dailyGoal: number;
+  /** Rest-day shields left */
+  freezes: number;
+  /** Days a shield covered, so the streak survived */
+  frozenDays: string[];
+  bestStreak: number;
+  badges: string[];
+  perfectLessons: number;
+  reviewCount: number;
+  startedAt: string;
 }
 
 export class HangeulGilDB extends Dexie {
