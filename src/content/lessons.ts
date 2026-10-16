@@ -411,25 +411,29 @@ const BASE: Omit<Lesson, 'phase'>[] = [
   },
 ];
 
-import { ENRICH, MORE, UPCOMING as UP1 } from './lessons-extra';
+import { ENRICH, MORE, UPCOMING as UP1, WHY_TL } from './lessons-extra';
 import { MORE2, UPCOMING2 } from './lessons-more';
 import { MORE3, UPCOMING3 } from './lessons-phase2';
 import { EVERYDAY } from './lessons-everyday';
 import { DAILY, LEVELUP } from './lessons-daily';
 import { EXTRA3, LEVELUP2 } from './lessons-more3';
-import { KIDS } from './lessons-kids';
+import { KIDS as KIDS_A } from './lessons-kids';
+import { KIDS2 } from './lessons-kids2';
+import { EXTRA6 } from './lessons-more6';
 import { EXTRA4, LEVELUP3 } from './lessons-more4';
 import { EXTRA5, LEVELUP4 } from './lessons-more5';
 
 export const UPCOMING = [...UP1, ...UPCOMING2, ...UPCOMING3];
 
-export const LESSONS: Lesson[] = [
+const RAW_LESSONS: Lesson[] = [
   ...BASE.map((l): Lesson => ({
     ...l,
     phase: 0,
     steps: l.steps.map((st, n) => {
       const extra = ENRICH[`${l.id}.${n}`];
-      return extra && st.kind === 'teach' ? { ...st, ...extra } : st;
+      if (extra && st.kind === 'teach') return { ...st, ...extra };
+      const why = WHY_TL[`${l.id}.${n}`];
+      return why && st.kind !== 'teach' && !st.whyTl ? { ...st, whyTl: why } : st;
     }),
   })),
   ...MORE,
@@ -440,13 +444,46 @@ export const LESSONS: Lesson[] = [
   ...EXTRA3,
   ...EXTRA4,
   ...EXTRA5,
+  ...EXTRA6,
   ...LEVELUP,
   ...LEVELUP2,
   ...LEVELUP3,
   ...LEVELUP4,
 ];
 
-export { KIDS };
+/** Small stable PRNG so the same quiz always shows its options in the same order. */
+function seeded(seed: string) {
+  let h = 2166136261;
+  for (const c of seed) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return ((h ^= h >>> 16) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Hand-written quizzes tended to list the right answer first. Shuffle the options
+ * once, deterministically, and guarantee the answer lands in a spread of positions.
+ */
+export function balanceChoices(lessons: Lesson[]): Lesson[] {
+  return lessons.map((l) => ({
+    ...l,
+    steps: l.steps.map((st, n) => {
+      if (st.kind !== 'choice') return st;
+      const rnd = seeded(`${l.id}:${n}:${st.prompt}`);
+      const opts = [...st.options];
+      for (let k = opts.length - 1; k > 0; k--) {
+        const j = Math.floor(rnd() * (k + 1));
+        [opts[k], opts[j]] = [opts[j], opts[k]];
+      }
+      return { ...st, options: opts };
+    }),
+  }));
+}
+
+export const LESSONS: Lesson[] = balanceChoices(RAW_LESSONS);
+export const KIDS: Lesson[] = balanceChoices([...KIDS_A, ...KIDS2]);
 
 /** Every lesson, including the Kids track. */
 export const ALL_LESSONS: Lesson[] = [...LESSONS, ...KIDS];

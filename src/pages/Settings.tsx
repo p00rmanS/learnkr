@@ -3,6 +3,7 @@ import { ALL_LESSONS } from '../content/lessons';
 import { db } from '../lib/db';
 import { usePrefs, type Prefs } from '../store/prefs';
 import { useAppStore } from '../store';
+import { isIos, isStandalone, useInstall } from '../lib/pwa';
 
 const TOGGLES: { k: keyof Prefs; label: string; hint: string }[] = [
   { k: 'say', label: 'Show "say it" guide', hint: 'Respelling like an-nyuhng-ha-seh-yo under Korean text.' },
@@ -17,6 +18,7 @@ export function Settings() {
   const [msg, setMsg] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
   const file = useRef<HTMLInputElement>(null);
+  const { canInstall, install } = useInstall();
 
   const doExport = async () => {
     const data = {
@@ -79,6 +81,24 @@ export function Settings() {
       </section>
 
       <section className="set-sec">
+        <h2>Install and offline</h2>
+        <p className="set-note">
+          Hangeul-gil works offline once you have opened it online. Install it for a full-screen app on your home screen.
+        </p>
+        <div className="row" style={{ marginTop: 16 }}>
+          {isStandalone() ? (
+            <span className="lab">Installed. You are using the app.</span>
+          ) : canInstall ? (
+            <button type="button" className="btn sm" onClick={install}>Install this app</button>
+          ) : isIos() ? (
+            <span className="set-note">On iPhone or iPad: tap the Share button, then "Add to Home Screen".</span>
+          ) : (
+            <span className="set-note">Open the browser menu and choose "Install app" or "Add to Home Screen". It appears once the page has loaded fully.</span>
+          )}
+        </div>
+      </section>
+
+      <section className="set-sec">
         <h2>Your data</h2>
         <p className="set-note">
           Progress lives only on this device, in this browser. {progress.completedLessons.length} of {ALL_LESSONS.length} lessons done. Export a backup before you clear browser data or switch devices.
@@ -107,6 +127,9 @@ export function Settings() {
       <section className="set-sec">
         <h2>Keyboard shortcuts</h2>
         <div className="keys">
+          <div><kbd>←</kbd> <kbd>→</kbd> previous and next step in a lesson</div>
+          <div><kbd>←</kbd> <kbd>→</kbd> previous and next line in a story</div>
+          <div><kbd>←</kbd> <kbd>→</kbd> switch stage on the road, or letter in the chart</div>
           <div><kbd>Enter</kbd> continue</div>
           <div><kbd>1</kbd> to <kbd>4</kbd> pick an answer</div>
           <div><kbd>Space</kbd> flip a review card</div>

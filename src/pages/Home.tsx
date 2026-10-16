@@ -166,6 +166,17 @@ export function Home() {
       </section>
 
       <section className="sec">
+        <Link to="/placement" className="place-banner">
+          <div>
+            <span className="lab">Placement quiz</span>
+            <h3>Already know some Korean?</h3>
+            <p>Take a three-minute quiz and skip straight to the right stage.</p>
+          </div>
+          <Arrow width={22} height={22} />
+        </Link>
+      </section>
+
+      <section className="sec" style={{ marginTop: 56 }}>
         <p className="eyebrow">Read and play</p>
         <div className="duo">
           <Link to="/stories" className="duo-card">

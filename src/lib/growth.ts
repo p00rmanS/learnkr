@@ -29,6 +29,7 @@ export const defaultGrowth = {
   perfectLessons: 0,
   reviewCount: 0,
   startedAt: '',
+  placed: [] as string[],
 };
 
 /** Fill in new fields on progress saved by an older version of the app. */
@@ -39,6 +40,7 @@ export function normalize(p: Partial<Progress> & Pick<Progress, 'completedLesson
     xpByDay: p.xpByDay ?? {},
     frozenDays: p.frozenDays ?? [],
     badges: p.badges ?? [],
+    placed: p.placed ?? [],
     startedAt: p.startedAt || localDate(),
   };
   // Older saves had study days but no XP: give them credit so levels do not start at zero
@@ -161,8 +163,10 @@ export const BADGES: Badge[] = [
 ];
 
 function ctxFor(p: Progress): Ctx {
-  const done = new Set(p.completedLessons);
-  const lessons = p.completedLessons.filter((id) => !id.startsWith('story.')).length;
+  // lessons skipped through placement do not count toward badges
+  const earnedIds = p.completedLessons.filter((id) => !p.placed.includes(id));
+  const done = new Set(earnedIds);
+  const lessons = earnedIds.filter((id) => !id.startsWith('story.')).length;
   const goalDays = Object.values(p.xpByDay).filter((x) => x >= p.dailyGoal).length;
   return { p, streak: streakInfo(p).current, done, lessons, goalDays };
 }

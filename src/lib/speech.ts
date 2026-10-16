@@ -87,3 +87,22 @@ interface SpeechRecognitionLike {
   onerror: (e: { error: string }) => void;
   start: () => void;
 }
+
+const NOTE_KEY = 'hg.voiceNoteDismissed';
+
+/** Whether the "no Korean voice" notice was dismissed this browser session. */
+export function voiceNoteDismissed(): boolean {
+  try {
+    return sessionStorage.getItem(NOTE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function dismissVoiceNote(): void {
+  try {
+    sessionStorage.setItem(NOTE_KEY, '1');
+  } catch {
+    /* private window: the notice may come back, which is acceptable */
+  }
+}

@@ -72,6 +72,8 @@ export interface Progress {
   perfectLessons: number;
   reviewCount: number;
   startedAt: string;
+  /** Lessons skipped via the placement quiz: count as done on the road, but earn no badges */
+  placed: string[];
 }
 
 export class HangeulGilDB extends Dexie {

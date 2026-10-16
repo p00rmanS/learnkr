@@ -13,8 +13,10 @@ import { StoryList, StoryReader } from './pages/Stories';
 import { Kids } from './pages/Kids';
 import { Phrasebook } from './pages/Phrasebook';
 import { Settings } from './pages/Settings';
+import { Placement } from './pages/Placement';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { StreakChip } from './components/Growth';
+import { useOnline } from './lib/pwa';
 import { Progress as ProgressPage } from './pages/Progress';
 import { applyShields, normalize } from './lib/growth';
 
@@ -39,6 +41,7 @@ const TITLES: [string, string][] = [
   ['/review', 'Review'],
   ['/settings', 'Settings'],
   ['/progress', 'Progress'],
+  ['/placement', 'Placement quiz'],
 ];
 
 function Shell() {
@@ -47,6 +50,7 @@ function Shell() {
   const [ready, setReady] = useState(false);
   const [due, setDue] = useState(0);
   const { pathname } = useLocation();
+  const online = useOnline();
 
   useEffect(() => {
     (async () => {
@@ -86,6 +90,7 @@ function Shell() {
 
   return (
     <>
+      {!online && <div className="offline-pill" role="status">Offline. Everything still works and your progress is saved.</div>}
       {!inLesson && <StreakChip />}
       {!inLesson && (
         <header className="topbar">
@@ -120,6 +125,7 @@ function Shell() {
             <Route path="/phrases" element={<Phrasebook />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/progress" element={<ProgressPage />} />
+            <Route path="/placement" element={<Placement />} />
             <Route path="*" element={<Home />} />
           </Routes>
           </ErrorBoundary>

@@ -4,8 +4,9 @@ import { Arrow, Bolt, Bubble, Check, Speaker } from '../components/Icons';
 import { storyItems } from '../content/allItems';
 import { STORIES, type Story } from '../content/stories';
 import { romanize, sayIt } from '../lib/pronounce';
-import { cancelSpeech, koreanVoiceAvailable, speakAndWait, speakKorean } from '../lib/speech';
+import { cancelSpeech, koreanVoiceAvailable, speakAndWait, speakKorean, voiceNoteDismissed } from '../lib/speech';
 import { useAppStore } from '../store';
+import { useLatest } from '../lib/useLatest';
 import { usePrefs } from '../store/prefs';
 
 const LEVEL_COLOR: Record<Story['level'], string> = { Starter: 'var(--jade)', Easy: 'var(--gold)', Medium: 'var(--red)' };
@@ -53,12 +54,37 @@ export function StoryReader() {
   const stop = useRef(false);
 
   useEffect(() => {
-    koreanVoiceAvailable().then((ok) => setNoVoice(!ok));
+    koreanVoiceAvailable().then((ok) => setNoVoice(!ok && !voiceNoteDismissed()));
     return () => {
       stop.current = true;
       cancelSpeech();
     };
   }, []);
+
+  // Left and right arrows move to the previous or next line and read it aloud
+  const activeRef = useLatest(active);
+  const rateRef = useLatest(slow ? 0.7 : 1);
+  const lineCount = story?.lines.length ?? 0;
+  const linesRef = useLatest(story?.lines ?? []);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement;
+      if (e.metaKey || e.ctrlKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      stop.current = true;
+      cancelSpeech();
+      setPlaying(false);
+      const cur = activeRef.current;
+      const last = linesRef.current.length - 1;
+      const n = e.key === 'ArrowRight' ? (cur === null ? 0 : Math.min(last, cur + 1)) : cur === null ? 0 : Math.max(0, cur - 1);
+      setActive(n);
+      document.getElementById(`line-${n}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      void speakKorean(linesRef.current[n].ko, rateRef.current);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lineCount, activeRef, linesRef, rateRef]);
 
   if (!story) {
     return (
@@ -106,6 +132,7 @@ export function StoryReader() {
 
       <div className="reader-bar">
         <button type="button" className="btn sm" onClick={playAll}>{playing ? 'Stop' : 'Play whole story'}</button>
+        <span className="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> previous and next line</span>
         <div className="toggles" role="group" aria-label="Show or hide">
           <button type="button" className={`tog ${showSay ? 'on' : ''}`} aria-pressed={showSay} onClick={() => toggle('say')}>Say it</button>
           <button type="button" className={`tog ${showRom ? 'on' : ''}`} aria-pressed={showRom} onClick={() => toggle('rom')}>Romanization</button>

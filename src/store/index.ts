@@ -11,6 +11,8 @@ interface AppState {
   completeLesson: (lessonId: string, items: ReviewItem[], opts?: { correct?: number; mistakes?: number; flatXp?: number }) => Promise<Summary>;
   awardReview: (f: Feedback) => Promise<Summary>;
   setGoal: (xp: number) => void;
+  /** Mark lessons as already known (placement). No XP and no review cards. */
+  markKnown: (ids: string[]) => Promise<void>;
 }
 
 const defaultProgress: Progress = {
@@ -64,6 +66,14 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ progress: next });
     await persist(next);
     return summary;
+  },
+
+  markKnown: async (ids) => {
+    const p = get().progress;
+    const fresh = ids.filter((id) => !p.completedLessons.includes(id));
+    const next = { ...p, completedLessons: [...new Set([...p.completedLessons, ...ids])], placed: [...new Set([...p.placed, ...fresh])] };
+    set({ progress: next });
+    await persist(next);
   },
 
   setGoal: (xp) => {

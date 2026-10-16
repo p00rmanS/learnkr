@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Assemble } from '../components/Assemble';
 import { Arrow, Bolt, Bubble, Close, Knot, Speaker } from '../components/Icons';
 import { Say } from '../components/Say';
 import { ALL_LESSONS, type Step } from '../content/lessons';
 import { composeSyllable } from '../lib/hangul';
-import { koreanVoiceAvailable, speakKorean } from '../lib/speech';
+import { dismissVoiceNote, koreanVoiceAvailable, speakKorean, voiceNoteDismissed } from '../lib/speech';
 import { useAppStore } from '../store';
 import type { Summary } from '../lib/growth';
 import { Flame, Ring } from '../components/Growth';
 import { BADGES, levelFor } from '../lib/growth';
 import { usePrefs } from '../store/prefs';
+import { useLatest } from '../lib/useLatest';
 
 const BURST = ['var(--red)', 'var(--blue)', 'var(--gold)', 'var(--jade)'];
 type Speak = (t: string) => void;
@@ -84,7 +85,7 @@ function Teach({ step, onNext, speak }: { step: Extract<Step, { kind: 'teach' }>
           </div>
         )}
       </div>
-      <div className="actionbar"><div className="in"><span className="kbd-hint">Press <kbd>Enter</kbd> to continue</span><button className="btn ph" type="button" onClick={onNext}>Continue <Arrow /></button></div></div>
+      <div className="actionbar"><div className="in"><span className="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> move between steps · <kbd>Enter</kbd> continue</span><button className="btn ph" type="button" onClick={onNext}>Continue <Arrow /></button></div></div>
     </>
   );
 }
@@ -104,8 +105,12 @@ function Feedback({ ok, why, whyTl, onNext, extra }: { ok: boolean; why: string;
   );
 }
 
-function Choice({ step, onNext, speak, onAnswer }: { step: Extract<Step, { kind: 'choice' }>; onNext: () => void; speak: Speak; onAnswer: (ok: boolean) => void }) {
-  const [picked, setPicked] = useState<string | null>(null);
+interface ChoiceSaved { picked: string | null }
+interface BuildSaved { ini: string; vow: string; fin: string; checked: boolean }
+type Saved = ChoiceSaved | BuildSaved;
+
+function Choice({ step, onNext, speak, onAnswer, saved, onSave }: { step: Extract<Step, { kind: 'choice' }>; onNext: () => void; speak: Speak; onAnswer: (ok: boolean) => void; saved?: ChoiceSaved; onSave: (s: Saved) => void }) {
+  const [picked, setPicked] = useState<string | null>(saved?.picked ?? null);
   const textual = step.options.some((o) => o.length > 3);
   return (
     <>
@@ -127,7 +132,19 @@ function Choice({ step, onNext, speak, onAnswer }: { step: Extract<Step, { kind:
           {step.options.map((o) => {
             const state = picked === null ? '' : o === step.answer ? 'right' : o === picked ? 'wrong' : '';
             return (
-              <button key={o} type="button" className={`opt ${textual ? 'text' : ''} ${state}`} disabled={picked !== null} onClick={() => { setPicked(o); onAnswer(o === step.answer); }}>{o}</button>
+              <button
+                key={o}
+                type="button"
+                className={`opt ${textual ? 'text' : ''} ${state}`}
+                disabled={picked !== null}
+                onClick={() => {
+                  setPicked(o);
+                  onSave({ picked: o });
+                  onAnswer(o === step.answer);
+                }}
+              >
+                {o}
+              </button>
             );
           })}
         </div>
@@ -137,13 +154,19 @@ function Choice({ step, onNext, speak, onAnswer }: { step: Extract<Step, { kind:
   );
 }
 
-function Build({ step, onNext, speak, onAnswer }: { step: Extract<Step, { kind: 'build' }>; onNext: () => void; speak: Speak; onAnswer: (ok: boolean) => void }) {
-  const [ini, setIni] = useState('');
-  const [vow, setVow] = useState('');
-  const [fin, setFin] = useState('');
-  const [checked, setChecked] = useState(false);
+function Build({ step, onNext, speak, onAnswer, saved, onSave }: { step: Extract<Step, { kind: 'build' }>; onNext: () => void; speak: Speak; onAnswer: (ok: boolean) => void; saved?: BuildSaved; onSave: (s: Saved) => void }) {
+  const [ini, setIni] = useState(saved?.ini ?? '');
+  const [vow, setVow] = useState(saved?.vow ?? '');
+  const [fin, setFin] = useState(saved?.fin ?? '');
+  const [checked, setChecked] = useState(saved?.checked ?? false);
   const made = ini && vow ? composeSyllable(ini, vow, fin) : '';
   const ok = made === step.target;
+
+  // remember the selection so stepping back shows exactly what you built
+  useEffect(() => {
+    onSave({ ini, vow, fin, checked });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ini, vow, fin, checked]);
 
   return (
     <>
@@ -198,7 +221,7 @@ function Rewards({ summary, goal, xpTotal }: { summary: Summary | null; goal: { 
         <div className="new-badges">
           {summary.newBadges.map((id) => {
             const b = BADGES.find((x) => x.id === id)!;
-            return <div key={id} className="nb" style={{ ['--tone' as string]: `var(--${b.tone === 'pink' ? 'pink' : b.tone})` }}><i className="kr">{b.glyph}</i><span><b>{b.name}</b><small>{b.desc}</small></span></div>;
+            return <div key={id} className="nb" style={{ ['--tone' as string]: `var(--${b.tone})` }}><i className="kr">{b.glyph}</i><span><b>{b.name}</b><small>{b.desc}</small></span></div>;
           })}
         </div>
       )}
@@ -208,28 +231,94 @@ function Rewards({ summary, goal, xpTotal }: { summary: Summary | null; goal: { 
 
 export function LessonPlayer() {
   const { id } = useParams();
+  // keyed by id so moving to another lesson always starts from a clean slate
+  return <LessonRun key={id} id={id} />;
+}
+
+function LessonRun({ id }: { id: string | undefined }) {
   const nav = useNavigate();
   const lesson = ALL_LESSONS.find((l) => l.id === id);
   const completeLesson = useAppStore((s) => s.completeLesson);
   const [i, setI] = useState(0);
+  const [furthest, setFurthest] = useState(0);
   const [finished, setFinished] = useState(false);
   const [stats, setStats] = useState({ correct: 0, mistakes: 0 });
   const [summary, setSummary] = useState<Summary | null>(null);
-  const answer = (ok: boolean) => setStats((s) => ({ correct: s.correct + (ok ? 1 : 0), mistakes: s.mistakes + (ok ? 0 : 1) }));
+  const [results, setResults] = useState<Record<number, Saved>>({});
+  const [hint, setHint] = useState('');
+  const completed = useRef(false);
   const slow = usePrefs((s) => s.slow);
   const togglePref = usePrefs((s) => s.toggle);
   const [noVoice, setNoVoice] = useState(false);
 
   useEffect(() => {
-    koreanVoiceAvailable().then((ok) => setNoVoice(!ok));
+    koreanVoiceAvailable().then((ok) => setNoVoice(!ok && !voiceNoteDismissed()));
   }, []);
 
-  // Keyboard: Enter continues, 1-9 picks an answer
+  const steps = lesson?.steps ?? [];
+  const step = steps[i];
+  const isAnswered = (n: number) => {
+    const st = steps[n];
+    const r = results[n];
+    if (!st) return false;
+    if (st.kind === 'teach') return true;
+    if (!r) return false;
+    return st.kind === 'choice' ? (r as ChoiceSaved).picked !== null : (r as BuildSaved).checked;
+  };
+
+  const flash = useCallback((msg: string) => {
+    setHint(msg);
+    window.setTimeout(() => setHint(''), 1600);
+  }, []);
+
+  const answer = (ok: boolean) => setStats((s) => ({ correct: s.correct + (ok ? 1 : 0), mistakes: s.mistakes + (ok ? 0 : 1) }));
+  const save = (n: number) => (r: Saved) => setResults((prev) => ({ ...prev, [n]: r }));
+
+  const next = () => {
+    if (!lesson) return;
+    if (i + 1 >= steps.length) {
+      // only ever pay out once, even if Continue is hit twice
+      if (!completed.current) {
+        completed.current = true;
+        completeLesson(lesson.id, lesson.items, stats).then(setSummary);
+      }
+      setFinished(true);
+    } else {
+      setI(i + 1);
+      setFurthest((f) => Math.max(f, i + 1));
+    }
+  };
+
+  const goNext = () => {
+    if (finished) return;
+    if (!isAnswered(i)) return flash('Pick an answer first, then move on.');
+    next();
+  };
+  const goPrev = () => {
+    if (finished) {
+      setFinished(false);
+      return;
+    }
+    if (i > 0) setI(i - 1);
+  };
+  const jump = (n: number) => {
+    if (n <= furthest && !finished) setI(n);
+  };
+
+  // keep a handle on the newest handlers so the key listener never goes stale
+  const keys = useLatest({ goNext, goPrev });
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement;
       if (e.metaKey || e.ctrlKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
-      if (e.key === 'Enter' && el.tagName !== 'BUTTON' && el.tagName !== 'A') {
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        keys.current.goNext();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        keys.current.goPrev();
+      } else if (e.key === 'Enter' && el.tagName !== 'BUTTON' && el.tagName !== 'A') {
         const go = document.querySelector<HTMLButtonElement>('.actionbar .btn:not([disabled])');
         if (go) {
           e.preventDefault();
@@ -242,7 +331,7 @@ export function LessonPlayer() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [keys]);
 
   const speak: Speak = (t) => {
     speakKorean(t, slow ? 0.7 : 1);
@@ -260,25 +349,27 @@ export function LessonPlayer() {
   const xpTotal = goal.xp;
   const isKids = lesson.phase === 5;
   const home = isKids ? '/kids' : '/learn';
-  const step = lesson.steps[i];
-  const next = () => {
-    if (i + 1 >= lesson.steps.length) {
-      completeLesson(lesson.id, lesson.items, stats).then(setSummary);
-      setFinished(true);
-    } else {
-      setI(i + 1);
-    }
-  };
   const candidate = ALL_LESSONS[ALL_LESSONS.indexOf(lesson) + 1];
   const following = candidate && candidate.phase === lesson.phase ? candidate : undefined;
+  const canNext = !finished && isAnswered(i);
 
   return (
     <div className="lesson" data-phase={lesson.phase}>
       <div className="lesson-top">
         <button className="x" type="button" onClick={() => nav(home)} aria-label="Exit lesson"><Close /></button>
-        <div className="segs" role="progressbar" aria-valuemin={0} aria-valuemax={lesson.steps.length} aria-valuenow={finished ? lesson.steps.length : i}>
-          {lesson.steps.map((_, n) => <i key={n} className={finished || n <= i ? 'on' : ''} />)}
+        <button type="button" className="step-nav" onClick={goPrev} disabled={i === 0 && !finished} aria-label="Previous step" title="Previous step (left arrow)">
+          <Arrow style={{ transform: 'scaleX(-1)' }} width={18} height={18} />
+        </button>
+        <div className="segs" role="progressbar" aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={finished ? steps.length : i}>
+          {steps.map((_, n) => (
+            <button key={n} type="button" className={`seg ${finished || n <= i ? 'on' : ''} ${n === i && !finished ? 'now' : ''}`} onClick={() => jump(n)} disabled={n > furthest} aria-label={`Step ${n + 1} of ${steps.length}`}>
+              <i />
+            </button>
+          ))}
         </div>
+        <button type="button" className="step-nav" onClick={goNext} disabled={!canNext} aria-label="Next step" title="Next step (right arrow)">
+          <Arrow width={18} height={18} />
+        </button>
         <button type="button" className={`speed ${slow ? 'on' : ''}`} aria-pressed={slow} onClick={() => togglePref('slow')} title="Play audio more slowly">
           {slow ? 'Slow' : '1×'}
         </button>
@@ -288,7 +379,7 @@ export function LessonPlayer() {
       {noVoice && !finished && (
         <div className="voice-note" role="alert">
           No Korean voice found on this device, so audio may be silent. Try Chrome or Edge, or add a Korean voice in your system settings.
-          <button type="button" onClick={() => setNoVoice(false)} aria-label="Dismiss"><Close width={16} height={16} /></button>
+          <button type="button" onClick={() => { dismissVoiceNote(); setNoVoice(false); }} aria-label="Dismiss"><Close width={16} height={16} /></button>
         </div>
       )}
 
@@ -306,22 +397,25 @@ export function LessonPlayer() {
               <p className="lede" style={{ margin: '18px auto 0' }}>{lesson.items.length} cards joined your review pile. They return when you are about to forget them.</p>
               <div className="row" style={{ marginTop: 34, justifyContent: 'center' }}>
                 {following ? (
-                  <button className="btn ph" type="button" onClick={() => { setI(0); setFinished(false); setStats({ correct: 0, mistakes: 0 }); setSummary(null); nav(`/learn/${following.id}`); }}>Next: {following.title} <Arrow /></button>
+                  <button className="btn ph" type="button" onClick={() => nav(`/learn/${following.id}`)}>Next: {following.title} <Arrow /></button>
                 ) : (
                   <Link className="btn ph" to={home}>{isKids ? 'Back to Kids' : 'Back to the road'}</Link>
                 )}
                 <Link className="btn ghost" to="/review">Review now</Link>
               </div>
+              <p className="kbd-hint" style={{ marginTop: 22 }}><kbd>←</kbd> go back through the lesson</p>
             </div>
           </div>
         ) : (
           <div key={`${lesson.id}-${i}`}>
             {step.kind === 'teach' && <Teach step={step} onNext={next} speak={speak} />}
-            {step.kind === 'choice' && <Choice step={step} onNext={next} speak={speak} onAnswer={answer} />}
-            {step.kind === 'build' && <Build step={step} onNext={next} speak={speak} onAnswer={answer} />}
+            {step.kind === 'choice' && <Choice step={step} onNext={next} speak={speak} onAnswer={answer} saved={results[i] as ChoiceSaved | undefined} onSave={save(i)} />}
+            {step.kind === 'build' && <Build step={step} onNext={next} speak={speak} onAnswer={answer} saved={results[i] as BuildSaved | undefined} onSave={save(i)} />}
           </div>
         )}
       </div>
+
+      {hint && <div className="toast" role="status">{hint}</div>}
     </div>
   );
 }

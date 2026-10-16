@@ -42,6 +42,18 @@ export function Path() {
   const [stage, setStage] = useState<number>(next?.phase ?? 0);
   const ph = STAGES[stage];
 
+  // Left and right arrows switch stage
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement;
+      if (e.metaKey || e.ctrlKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (e.key === 'ArrowRight') setStage((n) => Math.min(STAGES.length - 1, n + 1));
+      else if (e.key === 'ArrowLeft') setStage((n) => Math.max(0, n - 1));
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   const { nodes, height } = useMemo(() => {
     const items = [
       ...LESSONS.filter((l) => l.phase === stage).map((l) => ({ id: l.id, title: l.title, ko: l.ko, blurb: l.blurb, written: true })),
@@ -98,7 +110,10 @@ export function Path() {
           <h2>{ph.name} <span className="kr">{ph.ko}</span></h2>
           <p>{ph.blurb}</p>
         </div>
-        {next && <button type="button" className="btn ph sm" onClick={jump}>Jump to my stop <Arrow width={16} height={16} /></button>}
+        <div className="row">
+          <Link to="/placement" className="btn ghost sm">Placement quiz</Link>
+          {next && <button type="button" className="btn ph sm" onClick={jump}>Jump to my stop <Arrow width={16} height={16} /></button>}
+        </div>
       </div>
 
       <div className="roadmap" data-phase={stage} style={{ height }}>

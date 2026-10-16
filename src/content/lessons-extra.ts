@@ -61,6 +61,29 @@ export const ENRICH: Record<string, Extra> = {
   },
 };
 
+/** Taglish explanations for early quiz steps. Key: `${lessonId}.${stepIndex}` (0-based). */
+export const WHY_TL: Record<string, string> = {
+  '0.1.2': 'Ang ㅏ ay ang patayong guhit sa kanan. Ang ㄴ ay ang consonant sa kaliwa.',
+  '0.1.3': 'Ang ㅗ ay pahigang vowel, kaya nasa ilalim ng consonant.',
+  '0.2.3': 'Ang ㅗ ay "o". Nakaturo pataas ang tuldok.',
+  '0.2.4': 'Ang ㅜ ay may tuldok sa ilalim ng linya. Salamin ito ng ㅗ.',
+  '0.2.5': 'Ang ㅣ ay ang nakatayong tao.',
+  '0.3.3': 'Ang ㅁ ay hugis saradong labi, at "m" ang tunog.',
+  '0.3.4': 'Ang ㅁ ay nagiging ㅂ. Ang ㄷ ay galing sa ㄴ, ang ㅈ ay galing sa ㅅ.',
+  '0.3.5': 'Ang ㄴ ay dulo ng dila sa likod ng ngipin.',
+  '0.4.1': 'Ang 마 ay ㅁ + ㅏ = "ma".',
+  '0.4.2': 'Ang ㅅ ay "s", ang ㅏ ay "a": "sa".',
+  '0.4.3': 'ㄷ + ㅏ = 다. "da".',
+  '0.4.4': 'ㅂ + ㅏ = 바. "ba".',
+  '0.4.5': 'Ang 하 ay ㅎ + ㅏ = "ha".',
+  '0.5.1': 'Ang ㅛ ay "yo": ang ㅗ na may dalawang guhit.',
+  '0.5.2': 'Ang ㅠ ay ㅜ na may dagdag na guhit.',
+  '0.5.3': 'ㅇ + ㅕ = 여. Ang ㅇ ay tahimik.',
+  '0.6.1': 'Ang ㅈ ay nagiging ㅊ ("ch") kapag nadagdagan ng guhit.',
+  '0.6.2': 'Ang 카 ay ㅋ + ㅏ, may hangin na "ka".',
+  '0.6.3': 'ㅍ + ㅏ = 파.',
+};
+
 export const MORE: Lesson[] = [
   {
     id: '0.7',

@@ -1,3 +1,5 @@
+import { MORE_STORIES } from './stories-more';
+
 export interface StoryLine {
   ko: string;
   en: string;
@@ -210,7 +212,7 @@ export const STORIES: Story[] = [
     tip: '으로 / 로 means "by": 비행기로 (by plane), 지하철로 (by subway), 카드로 (by card). The same little particle shows up everywhere.',
     tl: 'Ang 로 ay "sa pamamagitan ng": 비행기로 = sa eroplano. Natutunan mo na ito sa 카드로 할게요. Pareho ang gamit sa transportasyon.',
     vocab: [
-      { ko: '여행', en: 'trip' },
+      { ko: '비행기', en: 'plane' },
       { ko: '지난주', en: 'last week' },
       { ko: '첫날', en: 'first day' },
       { ko: '한복', en: 'hanbok (traditional dress)' },
@@ -226,4 +228,5 @@ export const STORIES: Story[] = [
       { ko: '서울이 너무 좋아요. 다시 가고 싶어요!', en: 'I love Seoul so much. I want to go again!' },
     ],
   },
+  ...MORE_STORIES,
 ];

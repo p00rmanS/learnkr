@@ -1,14 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Arrow, Speaker } from '../components/Icons';
 import { GROUP_LABEL, LETTERS, sayable, type Letter, type LetterGroup } from '../content/letters';
 import { speakKorean } from '../lib/speech';
+import { useLatest } from '../lib/useLatest';
 
 const ORDER: LetterGroup[] = ['vowel', 'consonant', 'yvowel', 'aspirated', 'tense'];
 const isVowel = (g: LetterGroup) => g === 'vowel' || g === 'yvowel';
 
 export function Letters() {
   const [sel, setSel] = useState<Letter | null>(null);
+
+  // Display order is group by group, so arrows follow what you see on screen
+  const flat = useLatest(ORDER.flatMap((g) => LETTERS.filter((l) => l.group === g)));
+  const selRef = useLatest<Letter | null>(sel);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement;
+      if (e.metaKey || e.ctrlKey || e.altKey || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) return;
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const list = flat.current;
+      const at = selRef.current ? list.findIndex((l) => l.char === selRef.current!.char) : -1;
+      const n = e.key === 'ArrowRight' ? Math.min(list.length - 1, at + 1) : Math.max(0, at <= 0 ? 0 : at - 1);
+      setSel(list[n]);
+      speakKorean(sayable(list[n]), 1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [flat, selRef]);
 
   const pick = (l: Letter) => {
     setSel(l);
