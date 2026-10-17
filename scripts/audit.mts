@@ -50,9 +50,9 @@ for (const l of ALL_LESSONS) {
       if (!s.body.length || !s.body.every(nonEmpty)) err(`${w}: empty body`);
       if (!nonEmpty(s.tip)) err(`${w}: missing pro tip`);
       if (s.tl?.length && s.tl.every(nonEmpty)) withTl++;
-      else warn(`${w}: no Taglish`);
+      else err(`${w}: no Taglish`);
       if (nonEmpty(s.remember)) withRemember++;
-      else warn(`${w}: no memory hook`);
+      else err(`${w}: no memory hook`);
       if (!s.phrases && !s.glyphs && !s.blocks) warn(`${w}: teach step shows no examples`);
       for (const p of s.phrases ?? []) {
         phrases++;
@@ -71,7 +71,7 @@ for (const l of ALL_LESSONS) {
       if (new Set(s.options).size !== s.options.length) err(`${w}: duplicate options`);
       if (s.options.some((o) => !nonEmpty(o))) err(`${w}: empty option`);
       if (!nonEmpty(s.why)) err(`${w}: missing explanation`);
-      if (!nonEmpty(s.whyTl)) warn(`${w}: no Taglish explanation`);
+      if (!nonEmpty(s.whyTl)) err(`${w}: no Taglish explanation`);
       if (s.speak !== undefined && !nonEmpty(s.speak)) err(`${w}: empty speak text`);
       const pos = s.options.indexOf(s.answer);
       if (pos >= 0 && pos < 4) answerPos[pos]++;
@@ -91,6 +91,7 @@ for (const l of ALL_LESSONS) {
       for (const c of s.vowels) if (composeSyllable(s.initials[0], c, '') === '') err(`${w}: vowel ${c} cannot be composed`);
       for (const c of s.finals ?? []) if (composeSyllable(s.initials[0], s.vowels[0], c) === '') err(`${w}: final ${c} cannot be composed`);
       if (!nonEmpty(s.why)) err(`${w}: missing explanation`);
+      if (!nonEmpty(s.whyTl)) err(`${w}: no Taglish explanation`);
     }
   });
 }
@@ -110,6 +111,7 @@ for (const s of STORIES) {
   s.lines.forEach((ln, n) => {
     if (!nonEmpty(ln.ko) || !nonEmpty(ln.en)) err(`${at} line ${n + 1}: empty`);
     if (!hangul.test(ln.ko)) err(`${at} line ${n + 1}: no Hangul`);
+    if (!nonEmpty(ln.tl)) err(`${at} line ${n + 1}: no Taglish translation`);
   });
   if (!s.vocab.length) err(`${at}: no vocabulary`);
   const all = s.lines.map((l) => l.ko).join(' ');
@@ -141,7 +143,10 @@ for (const t of new Set(sample)) {
 }
 
 // ------------------------------------------------------------- letters
-for (const l of LETTERS) if (!nonEmpty(l.rom) || !nonEmpty(l.sound) || !nonEmpty(l.note)) err(`letter ${l.char}: incomplete`);
+for (const l of LETTERS) {
+  if (!nonEmpty(l.rom) || !nonEmpty(l.sound) || !nonEmpty(l.note)) err(`letter ${l.char}: incomplete`);
+  if (!nonEmpty(l.tl)) err(`letter ${l.char}: no Taglish note`);
+}
 
 // ------------------------------------------------------------ placement
 for (let lv = 0; lv <= 4; lv++) {
@@ -153,6 +158,7 @@ PLACEMENT.forEach((q, n) => {
   if (new Set(q.options).size !== q.options.length) err(`placement q${n + 1}: duplicate options`);
   if (q.options.length > 3) warn(`placement q${n + 1}: more than 3 options (keys 1-3 only)`);
   if (!nonEmpty(q.why)) err(`placement q${n + 1}: no explanation`);
+  if (!nonEmpty(q.whyTl)) err(`placement q${n + 1}: no Taglish explanation`);
 });
 
 // ------------------------------------------------------------------ PWA

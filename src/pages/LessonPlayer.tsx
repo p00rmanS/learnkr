@@ -13,7 +13,6 @@ import { BADGES, levelFor } from '../lib/growth';
 import { usePrefs } from '../store/prefs';
 import { useLatest } from '../lib/useLatest';
 
-const BURST = ['var(--red)', 'var(--blue)', 'var(--gold)', 'var(--jade)'];
 type Speak = (t: string) => void;
 const hasHangul = (t: string) => /[가-힣]/.test(t);
 
@@ -95,9 +94,12 @@ function Feedback({ ok, why, whyTl, onNext, extra }: { ok: boolean; why: string;
     <div className={`actionbar ${ok ? 'good' : 'bad'}`} role="status">
       <div className="in">
         <div className="verdict">
-          <b>{ok ? '맞아요. Correct.' : extra || 'Not quite.'}</b>
-          <p>{why}</p>
-          {whyTl && <p className="tlp">{whyTl}</p>}
+          {ok && <span className="stamp sm pop" aria-hidden="true">참 잘했어요</span>}
+          <div>
+            <b>{ok ? '맞아요. Correct.' : extra || 'Not quite.'}</b>
+            <p>{why}</p>
+            {whyTl && <p className="tlp">{whyTl}</p>}
+          </div>
         </div>
         <button className="btn ph" type="button" onClick={onNext} autoFocus>Continue <Arrow /></button>
       </div>
@@ -387,11 +389,8 @@ function LessonRun({ id }: { id: string | undefined }) {
         {finished ? (
           <div className="complete">
             <div>
-              <div className="burst" aria-hidden="true">
-                {Array.from({ length: 12 }, (_, n) => <i key={n} style={{ ['--n' as string]: n, ['--c' as string]: BURST[n % 4] }} />)}
-                <span className="kr">잘</span>
-              </div>
-              <span className="tag" style={{ fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ph)' }}>Lesson {lesson.id} complete</span>
+              <div className="stamp pop" aria-hidden="true">참 잘했어요!</div>
+              <span className="tag">Lesson {lesson.id} complete</span>
               <h1 className="h-page" style={{ marginTop: 14 }}>잘했어요. <em>Well done.</em></h1>
               <Rewards summary={summary} goal={goal} xpTotal={xpTotal} />
               <p className="lede" style={{ margin: '18px auto 0' }}>{lesson.items.length} cards joined your review pile. They return when you are about to forget them.</p>

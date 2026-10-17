@@ -90,6 +90,13 @@ function Shell() {
 
   return (
     <>
+      {/* ink-bleed filter used by the teacher's stamps */}
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true" focusable="false">
+        <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="4" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" />
+        </filter>
+      </svg>
       {!online && <div className="offline-pill" role="status">Offline. Everything still works and your progress is saved.</div>}
       {!inLesson && <StreakChip />}
       {!inLesson && (

@@ -66,6 +66,7 @@ export function Letters() {
                 <dt>Romanization</dt><dd className="mono">{sel.rom}</dd>
                 <dt>Sound</dt><dd>{sel.sound}</dd>
                 <dt>Why it looks like this</dt><dd>{sel.note}</dd>
+                {sel.tl && <><dt>Sa Taglish</dt><dd className="tl-dd">{sel.tl}</dd></>}
               </dl>
               <div className="row" style={{ marginTop: 22, justifyContent: 'center' }}>
                 <button className="btn sm" type="button" onClick={() => speakKorean(sayable(sel), 1)}><Speaker width={16} height={16} /> Hear it</button>

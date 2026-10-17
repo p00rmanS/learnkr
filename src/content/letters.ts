@@ -1,4 +1,5 @@
 import { composeSyllable } from '../lib/hangul';
+import { LETTER_TL } from './taglish';
 
 export type LetterGroup = 'vowel' | 'yvowel' | 'consonant' | 'aspirated' | 'tense';
 
@@ -8,6 +9,8 @@ export interface Letter {
   rom: string;
   sound: string;
   note: string;
+  /** Taglish note, merged in from taglish.ts */
+  tl?: string;
 }
 
 export const GROUP_LABEL: Record<LetterGroup, { en: string; ko: string }> = {
@@ -18,7 +21,7 @@ export const GROUP_LABEL: Record<LetterGroup, { en: string; ko: string }> = {
   tense: { en: 'Tense', ko: '된소리' },
 };
 
-export const LETTERS: Letter[] = [
+const RAW_LETTERS: Letter[] = [
   { char: 'ㅏ', group: 'vowel', rom: 'a', sound: 'ah, as in "father"', note: 'A person (ㅣ) with a dot (·) on the right: the sun is to the east of the person.' },
   { char: 'ㅓ', group: 'vowel', rom: 'eo', sound: 'uh, as in "cup", with rounder lips', note: 'Dot on the left. Mirror image of ㅏ.' },
   { char: 'ㅗ', group: 'vowel', rom: 'o', sound: 'oh, as in "go"', note: 'Dot above the flat earth (ㅡ).' },
@@ -53,6 +56,8 @@ export const LETTERS: Letter[] = [
   { char: 'ㅆ', group: 'tense', rom: 'ss', sound: 'tight s', note: 'ㅅ doubled.' },
   { char: 'ㅉ', group: 'tense', rom: 'jj', sound: 'tight j', note: 'ㅈ doubled.' },
 ];
+
+export const LETTERS: Letter[] = RAW_LETTERS.map((l) => ({ ...l, tl: LETTER_TL[l.char] ?? '' }));
 
 const VOWEL_GROUPS: LetterGroup[] = ['vowel', 'yvowel'];
 

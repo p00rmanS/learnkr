@@ -168,7 +168,7 @@ export function Placement() {
       {picked !== null && (
         <div className={`actionbar ${ok ? 'good' : 'bad'}`} role="status">
           <div className="in">
-            <div className="verdict"><b>{ok ? 'Correct.' : 'Not quite.'}</b><p>{question.why}</p></div>
+            <div className="verdict"><div><b>{ok ? 'Correct.' : 'Not quite.'}</b><p>{question.why}</p>{question.whyTl && <p className="tlp">{question.whyTl}</p>}</div></div>
             <button type="button" className="btn ph" onClick={advance} autoFocus>Next <Arrow /></button>
           </div>
         </div>

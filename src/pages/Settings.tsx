@@ -9,6 +9,7 @@ const TOGGLES: { k: keyof Prefs; label: string; hint: string }[] = [
   { k: 'say', label: 'Show "say it" guide', hint: 'Respelling like an-nyuhng-ha-seh-yo under Korean text.' },
   { k: 'rom', label: 'Show romanization', hint: 'Standard Revised Romanization like annyeonghaseyo.' },
   { k: 'en', label: 'Show English in stories', hint: 'Translations under each story line.' },
+  { k: 'tl', label: 'Show Taglish in stories', hint: 'A Taglish rendering under each story line.' },
   { k: 'slow', label: 'Play audio slowly', hint: 'Uses a slower speaking speed everywhere.' },
 ];
 

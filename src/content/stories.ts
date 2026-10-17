@@ -1,8 +1,11 @@
 import { MORE_STORIES } from './stories-more';
+import { STORY_TL } from './taglish';
 
 export interface StoryLine {
   ko: string;
   en: string;
+  /** Taglish rendering, merged in from taglish.ts */
+  tl?: string;
   who?: string;
 }
 
@@ -19,7 +22,7 @@ export interface Story {
   lines: StoryLine[];
 }
 
-export const STORIES: Story[] = [
+const RAW_STORIES: Story[] = [
   {
     id: 'hello-minsu',
     title: 'Hello, I am Minsu',
@@ -230,3 +233,9 @@ export const STORIES: Story[] = [
   },
   ...MORE_STORIES,
 ];
+
+/** Every story line carries a Taglish rendering alongside the English. */
+export const STORIES: Story[] = RAW_STORIES.map((st) => ({
+  ...st,
+  lines: st.lines.map((l, i) => ({ ...l, tl: STORY_TL[st.id]?.[i] ?? '' })),
+}));

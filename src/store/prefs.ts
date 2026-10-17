@@ -7,12 +7,14 @@ export interface Prefs {
   rom: boolean;
   /** English translations in stories */
   en: boolean;
+  /** Taglish translations in stories */
+  tl: boolean;
   /** Play audio slowly */
   slow: boolean;
 }
 
 const KEY = 'hg.prefs';
-const DEFAULTS: Prefs = { say: true, rom: true, en: true, slow: false };
+const DEFAULTS: Prefs = { say: true, rom: true, en: true, tl: true, slow: false };
 
 function load(): Prefs {
   try {
@@ -40,8 +42,8 @@ export const usePrefs = create<State>((set, get) => ({
   ...load(),
   toggle: (k) => {
     set({ [k]: !get()[k] } as Partial<State>);
-    const { say, rom, en, slow } = get();
-    save({ say, rom, en, slow });
+    const { say, rom, en, tl, slow } = get();
+    save({ say, rom, en, tl, slow });
   },
   reset: () => {
     set({ ...DEFAULTS });

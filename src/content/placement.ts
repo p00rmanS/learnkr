@@ -1,3 +1,5 @@
+import { PLACEMENT_TL } from './taglish';
+
 export interface PlacementQ {
   /** Stage 0-4, matching the road */
   level: number;
@@ -6,10 +8,11 @@ export interface PlacementQ {
   options: string[];
   answer: string;
   why: string;
+  whyTl?: string;
 }
 
 /** Three questions per stage, easiest stage first. */
-export const PLACEMENT: PlacementQ[] = [
+const RAW_PLACEMENT: PlacementQ[] = [
   // Stage 0: Hangul
   { level: 0, prompt: 'Which letter says "m"?', options: ['ㅂ', 'ㅁ', 'ㄴ'], answer: 'ㅁ', why: 'ㅁ is the outline of closed lips: "m".' },
   { level: 0, prompt: 'How do you read this syllable?', big: '사', options: ['ja', 'ha', 'sa'], answer: 'sa', why: 'ㅅ is "s" and ㅏ is "a".' },
@@ -37,3 +40,5 @@ export const PLACEMENT: PlacementQ[] = [
 ];
 
 export const STAGE_NAMES = ['Hangul', 'Survival Korean', 'Building Sentences', 'Real Conversations', 'Level Up'];
+
+export const PLACEMENT: PlacementQ[] = RAW_PLACEMENT.map((q, i) => ({ ...q, whyTl: PLACEMENT_TL[i] ?? '' }));

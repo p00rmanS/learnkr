@@ -68,10 +68,10 @@ export function Home() {
         <div>
           <p className="eyebrow">Korean for absolute beginners</p>
           <h1 className="display" style={{ marginTop: 22 }}>
-            Korean,<br /><em>stroke</em> by stroke.
+            Hangul is easier<br />than it <em>looks</em>.
           </h1>
           <p className="lede">
-            Hangul was designed on purpose. See how the letters lock together, understand why, then speak it. Explained in plain English and Taglish, with streaks that forgive you.
+            Every letter was designed on purpose. See the logic, say it out loud, and it sticks. Plain English and Taglish, with a streak that forgives you.
           </p>
           <div className="row" style={{ marginTop: 34 }}>
             <Link to={next ? `/learn/${next.id}` : '/learn'} className="btn">
@@ -79,6 +79,7 @@ export function Home() {
             </Link>
             <Link to="/hangul" className="btn ghost">Explore the letters</Link>
           </div>
+          <p className="scribble">psst: most people read Hangul in a few days.</p>
         </div>
 
         <div className="hero-stage">
@@ -196,7 +197,7 @@ export function Home() {
 
       <section className="sec">
         <p className="eyebrow">The method</p>
-        <h2 className="h-sec" style={{ marginTop: 16, maxWidth: '14em' }}>Habit tools without the guilt.</h2>
+        <h2 className="h-sec" style={{ marginTop: 16, maxWidth: '14em' }}>A streak that forgives you.</h2>
         <div className="method">
           <div className="m-card">
             <span className="m-num">01</span>

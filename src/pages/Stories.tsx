@@ -46,7 +46,7 @@ export function StoryReader() {
   const story = STORIES.find((s) => s.id === id);
   const completed = useAppStore((s) => s.progress.completedLessons);
   const completeLesson = useAppStore((s) => s.completeLesson);
-  const { say: showSay, rom: showRom, en: showEn, slow, toggle } = usePrefs();
+  const { say: showSay, rom: showRom, en: showEn, tl: showTl, slow, toggle } = usePrefs();
   const [playing, setPlaying] = useState(false);
   const [active, setActive] = useState<number | null>(null);
   const [noVoice, setNoVoice] = useState(false);
@@ -137,6 +137,7 @@ export function StoryReader() {
           <button type="button" className={`tog ${showSay ? 'on' : ''}`} aria-pressed={showSay} onClick={() => toggle('say')}>Say it</button>
           <button type="button" className={`tog ${showRom ? 'on' : ''}`} aria-pressed={showRom} onClick={() => toggle('rom')}>Romanization</button>
           <button type="button" className={`tog ${showEn ? 'on' : ''}`} aria-pressed={showEn} onClick={() => toggle('en')}>English</button>
+          <button type="button" className={`tog ${showTl ? 'on' : ''}`} aria-pressed={showTl} onClick={() => toggle('tl')}>Taglish</button>
           <button type="button" className={`tog ${slow ? 'on' : ''}`} aria-pressed={slow} onClick={() => toggle('slow')}>Slow audio</button>
         </div>
       </div>
@@ -167,6 +168,7 @@ export function StoryReader() {
               {showSay && <span className="l-say">{sayIt(l.ko)}</span>}
               {showRom && <span className="l-rom">{romanize(l.ko)}</span>}
               {showEn && <span className="l-en">{l.en}</span>}
+              {showTl && l.tl && <span className="l-tl">{l.tl}</span>}
               <Speaker className="l-sp" width={16} height={16} />
             </button>
           );
