@@ -9,6 +9,7 @@ import { PLACEMENT } from '../src/content/placement.ts';
 import { existsSync, readFileSync } from 'node:fs';
 import { composeSyllable, decomposeSyllable } from '../src/lib/hangul.ts';
 import { romanize, sayIt } from '../src/lib/pronounce.ts';
+import { GLOSS_TL } from '../src/content/gloss-tl.ts';
 
 const errors: string[] = [];
 const warns: string[] = [];
@@ -40,6 +41,7 @@ for (const l of ALL_LESSONS) {
     const prev = itemKorean.get(it.id);
     if (prev !== undefined && prev !== it.korean) err(`${at}: item id ${it.id} reused for "${it.korean}" and "${prev}"`);
     itemKorean.set(it.id, it.korean);
+    if (hangul.test(it.korean) && !/^[a-z]{1,3}$/.test(it.english) && !GLOSS_TL[it.english]) err(`${at}: no Taglish gloss for "${it.english}"`);
   }
 
   l.steps.forEach((s, n) => {

@@ -9,12 +9,15 @@ import { speakKorean } from '../lib/speech';
 import { useAppStore } from '../store';
 import { Flame } from '../components/Growth';
 import { REVIEW_XP } from '../lib/growth';
+import { glossTl } from '../content/gloss-tl';
+import { usePrefs } from '../store/prefs';
 
 export function Review() {
   const [queue, setQueue] = useState<ReviewCard[] | null>(null);
   const [shown, setShown] = useState(false);
   const [total, setTotal] = useState(0);
   const awardReview = useAppStore((s) => s.awardReview);
+  const tl = usePrefs((s) => s.tl);
   const streakNow = useAppStore((s) => s.progress.bestStreak);
   const [session, setSession] = useState({ xp: 0, again: 0, done: 0 });
 
@@ -92,6 +95,7 @@ export function Review() {
           </div>
           <div className="face back">
             <div className="ans">{item.english}</div>
+            {tl && glossTl(item.english) && <div className="ans-tl">{glossTl(item.english)}</div>}
             <Say text={item.korean} />
             <span className="hint">{item.korean}</span>
           </div>

@@ -5,6 +5,7 @@ import { ALL_LESSONS } from '../content/lessons';
 import { romanize, sayIt } from '../lib/pronounce';
 import { speakKorean } from '../lib/speech';
 import { usePrefs } from '../store/prefs';
+import { glossTl } from '../content/gloss-tl';
 
 const STAGES = [
   { v: 'all', label: 'All' },
@@ -20,6 +21,7 @@ const PAGE = 60;
 
 export function Phrasebook() {
   const slow = usePrefs((s) => s.slow);
+  const tl = usePrefs((s) => s.tl);
   const [q, setQ] = useState('');
   const [stage, setStage] = useState('all');
   const [limit, setLimit] = useState(PAGE);
@@ -76,7 +78,7 @@ export function Phrasebook() {
               <div className="pb-ko">{r.korean}</div>
               {r.say && <div className="pb-say">{r.say}<span>{r.rom}</span></div>}
             </div>
-            <div className="pb-en">{r.english}</div>
+            <div className="pb-en">{r.english}{tl && glossTl(r.english) && <em className="pb-tl">{glossTl(r.english)}</em>}</div>
             <Link to={`/learn/${r.lesson}`} className="pb-tag" title="Open the lesson">{r.lesson}</Link>
           </div>
         ))}

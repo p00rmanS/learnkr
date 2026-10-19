@@ -663,3 +663,6 @@ kbd { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 1px 
 }
 
 .detail dd.tl-dd { font-family: var(--hand); font-weight: 700; font-size: 22px; line-height: 1.25; color: var(--blue); }
+
+.ans-tl { font-family: 'Gaegu', cursive; font-size: 1.35rem; color: var(--blue); margin-top: 4px; }
+.pb-tl { display: block; font-family: 'Gaegu', cursive; font-style: normal; font-size: 1.05rem; color: var(--blue); }
