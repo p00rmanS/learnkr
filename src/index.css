@@ -666,3 +666,7 @@ kbd { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 1px 
 
 .ans-tl { font-family: 'Gaegu', cursive; font-size: 1.35rem; color: var(--blue); margin-top: 4px; }
 .pb-tl { display: block; font-family: 'Gaegu', cursive; font-style: normal; font-size: 1.05rem; color: var(--blue); }
+
+/* Nothing may widen the page sideways on phones (tilted ticker, hard shadows). */
+html { overflow-x: clip; max-width: 100%; }
+.stage { max-width: 100%; box-sizing: border-box; }
