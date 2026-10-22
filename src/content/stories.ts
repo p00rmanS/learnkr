@@ -1,4 +1,6 @@
 import { MORE_STORIES } from './stories-more';
+import { MORE_STORIES2 } from './stories-more2';
+import { STORY_TL2 } from './taglish-stories2';
 import { STORY_TL } from './taglish';
 
 export interface StoryLine {
@@ -232,10 +234,11 @@ const RAW_STORIES: Story[] = [
     ],
   },
   ...MORE_STORIES,
+  ...MORE_STORIES2,
 ];
 
 /** Every story line carries a Taglish rendering alongside the English. */
 export const STORIES: Story[] = RAW_STORIES.map((st) => ({
   ...st,
-  lines: st.lines.map((l, i) => ({ ...l, tl: STORY_TL[st.id]?.[i] ?? '' })),
+  lines: st.lines.map((l, i) => ({ ...l, tl: (STORY_TL[st.id] ?? STORY_TL2[st.id])?.[i] ?? '' })),
 }));
