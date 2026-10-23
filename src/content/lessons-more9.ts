@@ -128,8 +128,8 @@ export const KIDS4: Lesson[] = [
       ),
       tc(
         'I want to become...',
-        ['Answer with noun + 이/가 되고 싶어요. 소방관이 되고 싶어요 means "I want to become a firefighter". 의사가 되고 싶어요 means "I want to become a doctor". Use 이 after a batchim and 가 after a vowel.', '-고 싶어요 is "want to" from lesson 2.5. 되고 싶어요 is just 되다 plus that ending.'],
-        'Sagot: pangngalan + 이/가 되고 싶어요. 소방관이 되고 싶어요 = "Gusto kong maging bumbero." 의사가 되고 싶어요 = "Gusto kong maging doktor." 이 pagkatapos ng batchim, 가 pagkatapos ng patinig. Ang -고 싶어요 ay "gusto" (2.5).',
+        ['Answer with noun + 이/가 되고 싶어요. 소방관이 되고 싶어요 means "I want to become a firefighter". 의사가 되고 싶어요 means "I want to become a doctor". Use 이 after a batchim and 가 after a vowel.', '-고 싶어요 is "want to" from lesson 2.7. 되고 싶어요 is just 되다 plus that ending.'],
+        'Sagot: pangngalan + 이/가 되고 싶어요. 소방관이 되고 싶어요 = "Gusto kong maging bumbero." 의사가 되고 싶어요 = "Gusto kong maging doktor." 이 pagkatapos ng batchim, 가 pagkatapos ng patinig. Ang -고 싶어요 ay "gusto" (2.7).',
         'Dream out loud! Say what you want to be in Korean. It is a nice icebreaker with a Korean friend.',
         '되고 (doe-go) sounds like "doe, go!" A deer (doe) goes off to become something new.',
         [
@@ -209,8 +209,8 @@ export const EXTRA9: Lesson[] = [
     steps: [
       tc(
         'The basic tastes',
-        ['달아요 is sweet (달다). 짜요 is salty (짜다). 써요 is bitter (쓰다). 셔요 is sour (시다 → 셔요). 매워요 is spicy, which you know from lesson 3.8.', 'Add 너무 ("too") for extremes: 너무 짜요 ("it is too salty"), 너무 달아요 ("it is too sweet").'],
-        '달아요 (matamis), 짜요 (maalat), 써요 (mapait), 셔요 (maasim), 매워요 (maanghang, 3.8). Idagdag ang 너무 = "sobra": 너무 짜요 = "Sobrang alat." 너무 달아요 = "Sobrang tamis."',
+        ['달아요 is sweet (달다). 짜요 is salty (짜다). 써요 is bitter (쓰다). 셔요 is sour (시다 → 셔요). 매워요 is spicy, which you know from lesson 3.3.', 'Add 너무 ("too") for extremes: 너무 짜요 ("it is too salty"), 너무 달아요 ("it is too sweet").'],
+        '달아요 (matamis), 짜요 (maalat), 써요 (mapait), 셔요 (maasim), 매워요 (maanghang, 3.3). Idagdag ang 너무 = "sobra": 너무 짜요 = "Sobrang alat." 너무 달아요 = "Sobrang tamis."',
         'Say the taste word every time you eat for a week. Food gives you a daily quiz.',
         '짜요 (jja-yo) sounds like "jaw-yo". Salty food makes your jaw pucker. 짜요 = jaw-yo!',
         [
@@ -299,7 +299,7 @@ export const EXTRA9: Lesson[] = [
     steps: [
       tc(
         'Adjective + 아/어지다',
-        ['Add 지다 to an adjective in its 아/어 form to say it "becomes" that way. 따뜻하다 → 따뜻해지다 (become warm). Past: 따뜻해졌어요 ("it has become warm"). Use 아/어 as in lesson 2.9: 하다 → 해, 쉽다 → 쉬워, 고프다 → 고파, 예쁘다 → 예뻐.', '날씨가 따뜻해졌어요 means "the weather has become warm". 배가 고파졌어요 means "I became hungry". 한국어가 쉬워졌어요 means "Korean has become easy". Keep studying and this one comes true.'],
+        ['Add 지다 to an adjective in its 아/어 form to say it "becomes" that way. 따뜻하다 → 따뜻해지다 (become warm). Past: 따뜻해졌어요 ("it has become warm"). Use 아/어 as in lesson 2.3: 하다 → 해, 쉽다 → 쉬워, 고프다 → 고파, 예쁘다 → 예뻐.', '날씨가 따뜻해졌어요 means "the weather has become warm". 배가 고파졌어요 means "I became hungry". 한국어가 쉬워졌어요 means "Korean has become easy". Keep studying and this one comes true.'],
         'Idagdag ang 지다 sa 아/어 form ng adjective para sabihing "naging". 따뜻하다 → 따뜻해졌어요 = "Naging mainit-init na." 배가 고파졌어요 = "Nagutom ako." 한국어가 쉬워졌어요 = "Gumaan na ang Korean." Mag-aral ka lang, magkakatotoo ito.',
         'Use it to track progress. Every month say 한국어가 쉬워졌어요 and notice how you have changed.',
         '지다 (ji-da) sounds like "gee-da": "gee, it\'s da (the) new state!" Adjective + 지다 = it became.',

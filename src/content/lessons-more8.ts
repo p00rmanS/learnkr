@@ -71,8 +71,8 @@ export const EXTRA8: Lesson[] = [
     steps: [
       tc(
         'Tickets and fees',
-        ['Famous places like palaces are 관광지 (tourist spots). The price to get in is the 입장료. A ticket is 표. Order with the counter 장 (sheets and tickets, lesson 4.13): 어른 한 장 주세요 ("one adult ticket, please"). 어른 is adult and 학생 is student.', 'Ask for savings with 학생 할인 돼요? ("is there a student discount?"). Many places are free if you wear a hanbok, so it is worth asking.'],
-        'Ang sikat na lugar gaya ng palasyo ay 관광지. Ang bayad ay 입장료. Ang tiket ay 표. Gamitin ang pambilang na 장 (4.13): 어른 한 장 주세요 = "Isang tiket pang-adult po." 학생 할인 돼요? = "May student discount po ba?" Libre rin sa maraming palasyo kapag naka-hanbok.',
+        ['Famous places like palaces are 관광지 (tourist spots). The price to get in is the 입장료. A ticket is 표. Order with the counter 장 (sheets and tickets, lesson 4.25): 어른 한 장 주세요 ("one adult ticket, please"). 어른 is adult and 학생 is student.', 'Ask for savings with 학생 할인 돼요? ("is there a student discount?"). Many places are free if you wear a hanbok, so it is worth asking.'],
+        'Ang sikat na lugar gaya ng palasyo ay 관광지. Ang bayad ay 입장료. Ang tiket ay 표. Gamitin ang pambilang na 장 (4.25): 어른 한 장 주세요 = "Isang tiket pang-adult po." 학생 할인 돼요? = "May student discount po ba?" Libre rin sa maraming palasyo kapag naka-hanbok.',
         'Always ask 할인 돼요? before paying. Students, seniors and groups often get a discount, and the worst answer is only "no".',
         '표 (pyo) rhymes with "pyo" in "Pyongyang". A 표 is your ticket to ride, so picture "pyo" printed on it.',
         [
@@ -84,8 +84,8 @@ export const EXTRA8: Lesson[] = [
       ),
       tc(
         'Photos and asking where',
-        ['Ask a passer-by for a photo: 사진 찍어 주세요 ("please take a photo for me"). If you are lost on a map, point and say 여기가 어디예요? ("where is this place?").', 'Ask the closing time with 몇 시까지 해요? ("until what time are you open?"). 까지 means "until" and you met it in lesson 4.14.'],
-        'Magpakuha ng larawan: 사진 찍어 주세요 = "Pakikuha po ng litrato ko." Kung naliligaw sa mapa, ituro at sabihin: 여기가 어디예요? = "Nasaan po ito?" Itanong ang oras ng sarado: 몇 시까지 해요? = "Hanggang anong oras po kayo bukas?" Ang 까지 ay "hanggang" (4.14).',
+        ['Ask a passer-by for a photo: 사진 찍어 주세요 ("please take a photo for me"). If you are lost on a map, point and say 여기가 어디예요? ("where is this place?").', 'Ask the closing time with 몇 시까지 해요? ("until what time are you open?"). 까지 means "until" and you met it in lesson 4.26.'],
+        'Magpakuha ng larawan: 사진 찍어 주세요 = "Pakikuha po ng litrato ko." Kung naliligaw sa mapa, ituro at sabihin: 여기가 어디예요? = "Nasaan po ito?" Itanong ang oras ng sarado: 몇 시까지 해요? = "Hanggang anong oras po kayo bukas?" Ang 까지 ay "hanggang" (4.26).',
         'Hold your phone out with both hands and smile. Body language plus 사진 찍어 주세요 gets you a great shot every time.',
         '찍다 (to snap) sounds like the "click" of a camera: jjik! Picture the shutter going jjik.',
         [
@@ -174,8 +174,8 @@ export const EXTRA8: Lesson[] = [
       ),
       tc(
         'Irregular ㄷ and the one-subject rule',
-        ['듣다 (to listen) and 걷다 (to walk) change ㄷ to ㄹ before a vowel: 들으면서, 걸으면서. This is the ㄷ-irregular from lesson 4.10.', 'The subject must stay the same in both parts. "I eat while he watches" needs a different pattern. Only one doer, two actions.'],
-        'Ang 듣다 at 걷다 ay nagpapalit ng ㄷ → ㄹ bago ang patinig: 들으면서, 걸으면서 (ㄷ-irregular, 4.10). Dapat iisa ang gumagawa sa dalawang kilos. Hindi puwede ang "Kumakain ako habang nanonood siya" sa pattern na ito.',
+        ['듣다 (to listen) and 걷다 (to walk) change ㄷ to ㄹ before a vowel: 들으면서, 걸으면서. This is the ㄷ-irregular from lesson 4.11.', 'The subject must stay the same in both parts. "I eat while he watches" needs a different pattern. Only one doer, two actions.'],
+        'Ang 듣다 at 걷다 ay nagpapalit ng ㄷ → ㄹ bago ang patinig: 들으면서, 걸으면서 (ㄷ-irregular, 4.11). Dapat iisa ang gumagawa sa dalawang kilos. Hindi puwede ang "Kumakain ako habang nanonood siya" sa pattern na ito.',
         'Do not stack three actions in one sentence. Stay with two actions and it will sound natural.',
         'ㄷ→ㄹ: picture a door (ㄷ) that swings open and turns into a loop (ㄹ) when a vowel walks in.',
         [
@@ -206,7 +206,7 @@ export const EXTRA8: Lesson[] = [
         'Planning: -(으)려고 해요',
         ['Add -(으)려고 해요 to a verb stem for "I plan to" or "I am thinking of". No batchim: 려고 (쉬다 → 쉬려고). With a batchim: 으려고 (먹다 → 먹으려고).', '주말에 쉬려고 해요 means "I plan to rest on the weekend". 한국어를 배우려고 해요 means "I plan to learn Korean".'],
         'Ang -(으)려고 해요 ay "balak kong". Walang batchim: 려고 (쉬다 → 쉬려고). May batchim: 으려고 (먹다 → 먹으려고). 주말에 쉬려고 해요 = "Balak kong magpahinga sa weekend." 한국어를 배우려고 해요 = "Balak kong mag-aral ng Korean."',
-        'It is the same ending as "in order to" from lesson 4.7, only now followed by 해요. A purpose becomes a plan.',
+        'It is the same ending as "in order to" from lesson 4.20, only now followed by 해요. A purpose becomes a plan.',
         '려고 해요 = "ryeo-go hae-yo". Think "ready to go": ryeo-go ≈ ready, go. A plan that is ready to go.',
         [
           { ko: '주말에 쉬려고 해요.', en: 'I plan to rest on the weekend.' },
@@ -248,7 +248,7 @@ export const EXTRA8: Lesson[] = [
         'Verb or adjective stem + 잖아요',
         ['-잖아요 means "you know" or "as we both know". Add it to a stem: 오다 → 오잖아요, 피곤하다 → 피곤하잖아요. It reminds the listener of a fact they already know or should know.', '비가 오잖아요 means "it is raining, you know" (so why go out?). 어제 말했잖아요 means "I told you yesterday!" (a gentle complaint).'],
         'Ang -잖아요 ay "alam mo naman" o "di ba". Idagdag sa stem: 오다 → 오잖아요. Ipinapaalala sa kausap ang bagay na alam na nila. 비가 오잖아요 = "Umuulan kaya, alam mo naman." 어제 말했잖아요 = "Sinabi ko na kahapon, di ba!" (bahagyang reklamo).',
-        'Do not use it to teach new facts. It is for shared knowledge. For new information use -거든요 (lesson 4.17) instead.',
+        'Do not use it to teach new facts. It is for shared knowledge. For new information use -거든요 (lesson 4.29) instead.',
         '잖아요 (jan-a-yo) sounds like "jeez, ah, yo!" Imagine saying "Jeez, you KNOW!" with raised eyebrows.',
         [
           { ko: '비가 오잖아요.', en: 'It is raining, you know.' },
@@ -288,9 +288,9 @@ export const EXTRA8: Lesson[] = [
     steps: [
       tc(
         'Guessing from evidence',
-        ['-나 봐요 means "it seems that ..." and you base it on something you can see or hear right now. Verbs: stem + 나 봐요 (오다 → 오나 봐요). Past: 왔나 봐요 ("it seems he came"). Adjectives with a batchim use -(으)ㄴ가 봐요: 피곤하다 → 피곤한가 봐요.', '우산을 든 사람이 많아요. 비가 오나 봐요. ("Many people hold umbrellas. It seems to be raining.")'],
-        'Ang -나 봐요 ay "mukhang" batay sa nakikita o naririnig mo ngayon. Verb: stem + 나 봐요 (오다 → 오나 봐요). Past: 왔나 봐요 (mukhang dumating na). Adjective: -(으)ㄴ가 봐요 (피곤하다 → 피곤한가 봐요). Halimbawa: maraming may payong → 비가 오나 봐요 = "Mukhang umuulan."',
-        'Use it when you see clues. If you only have a feeling, use -(으)ㄴ/는 것 같아요 (lesson 4.15). -나 봐요 needs real evidence.',
+        ['-나 봐요 means "it seems that ..." and you base it on something you can see or hear right now. Verbs: stem + 나 봐요 (오다 → 오나 봐요). Past: 왔나 봐요 ("it seems he came"). Adjectives use -(으)ㄴ가 봐요 instead: 피곤하다 → 피곤한가 봐요 (words ending in 있다 or 없다 are the exception, see the next step).', '우산을 든 사람이 많아요. 비가 오나 봐요. ("Many people hold umbrellas. It seems to be raining.")'],
+        'Ang -나 봐요 ay "mukhang" batay sa nakikita o naririnig mo ngayon. Verb: stem + 나 봐요 (오다 → 오나 봐요). Past: 왔나 봐요 (mukhang dumating na). Adjective: -(으)ㄴ가 봐요 (피곤하다 → 피곤한가 봐요), maliban sa 있다/없다. Halimbawa: maraming may payong → 비가 오나 봐요 = "Mukhang umuulan."',
+        'Use it when you see clues. If you only have a feeling, use -(으)ㄴ/는 것 같아요 (lesson 4.28). -나 봐요 needs real evidence.',
         '봐요 means "look/see". 오나 봐요 = "(I) look and (it) comes". You look at the evidence, and then you guess.',
         [
           { ko: '비가 오나 봐요.', en: 'It seems to be raining.' },
@@ -311,7 +311,7 @@ export const EXTRA8: Lesson[] = [
         ],
       ),
       ch('You see wet umbrellas everywhere. What do you say?', '비가 오나 봐요.', ['비가 올 거예요.', '비가 왔어요.'], '-나 봐요 guesses from evidence.', '-나 봐요 = hula mula sa palatandaan.'),
-      ch('Make "you seem tired" from 피곤하다.', '피곤한가 봐요.', ['피곤하나 봐요.', '피곤해 봐요.'], 'Adjective with a final ㄴ form: -(으)ㄴ가 봐요.', 'Adjective: -(으)ㄴ가 봐요.'),
+      ch('Make "you seem tired" from 피곤하다.', '피곤한가 봐요.', ['피곤하나 봐요.', '피곤해 봐요.'], 'Adjectives use -(으)ㄴ가 봐요.', 'Adjective: -(으)ㄴ가 봐요.'),
       ch('"It seems my friend came."', '친구가 왔나 봐요.', ['친구가 오나 봐요.', '친구가 오려고 해요.'], 'Past plus -나 봐요: 왔나 봐요.', 'Past + -나 봐요.'),
     ],
   },

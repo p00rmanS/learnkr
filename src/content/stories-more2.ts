@@ -245,8 +245,8 @@ export const MORE_STORIES2: Story[] = [
     level: 'Easy',
     kind: 'Dialogue',
     blurb: 'Give the destination, ask the time and pay by card.',
-    tip: '"Please stop here" is 여기에서 세워 주세요. The helper 주세요 (lesson 4.1) turns any verb into a polite request.',
-    tl: 'Ang "Pakihinto po rito" ay 여기에서 세워 주세요. Ang 주세요 (4.1) ang nagiging magalang na pakiusap sa kahit anong verb.',
+    tip: '"Please stop here" is 여기에서 세워 주세요. The helper 주세요 (lesson 4.2) turns any verb into a polite request.',
+    tl: 'Ang "Pakihinto po rito" ay 여기에서 세워 주세요. Ang 주세요 (4.2) ang nagiging magalang na pakiusap sa kahit anong verb.',
     vocab: [
       { ko: '알겠습니다', en: 'understood (formal)' },
       { ko: '쯤', en: 'about, around' },

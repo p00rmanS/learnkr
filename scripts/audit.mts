@@ -98,6 +98,15 @@ for (const l of ALL_LESSONS) {
   });
 }
 
+// cross-references such as "lesson 4.25" or "(4.25)" must point at a real lesson
+for (const l of ALL_LESSONS) {
+  l.steps.forEach((s, n) => {
+    if (s.kind !== 'teach') return;
+    const text = [...s.body, ...(s.tl ?? []), s.tip, s.remember].join(' ');
+    for (const m of text.matchAll(/(?:lesson |\()(K?\d+\.\d+|K\d+)[,)]/g)) if (!ids.has(m[1])) err(`lesson ${l.id} step ${n + 1}: refers to lesson ${m[1]}, which does not exist`);
+  });
+}
+
 // the stage a lesson belongs to must be contiguous for the road map
 for (let p = 0; p <= 4; p++) if (!LESSONS.some((l) => l.phase === p)) err(`stage ${p} has no lessons`);
 if (!KIDS.length) err('no kids lessons');
