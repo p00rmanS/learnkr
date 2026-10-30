@@ -425,6 +425,7 @@ import { KIDS3 } from './lessons-kids3';
 import { EXTRA8 } from './lessons-more8';
 import { EXTRA9, KIDS4 } from './lessons-more9';
 import { EXTRA10, KIDS5 } from './lessons-more10';
+import { EXTRA11, KIDS6 } from './lessons-more11';
 import { EXTRA4, LEVELUP3 } from './lessons-more4';
 import { EXTRA5, LEVELUP4 } from './lessons-more5';
 
@@ -459,6 +460,7 @@ const RAW_LESSONS: Lesson[] = [
   ...EXTRA8,
   ...EXTRA9,
   ...EXTRA10,
+  ...EXTRA11,
 ];
 
 /** Small stable PRNG so the same quiz always shows its options in the same order. */
@@ -493,7 +495,7 @@ export function balanceChoices(lessons: Lesson[]): Lesson[] {
 }
 
 export const LESSONS: Lesson[] = balanceChoices(RAW_LESSONS);
-export const KIDS: Lesson[] = balanceChoices([...KIDS_A, ...KIDS2, ...KIDS3, ...KIDS4, ...KIDS5]);
+export const KIDS: Lesson[] = balanceChoices([...KIDS_A, ...KIDS2, ...KIDS3, ...KIDS4, ...KIDS5, ...KIDS6]);
 
 /** Every lesson, including the Kids track. */
 export const ALL_LESSONS: Lesson[] = [...LESSONS, ...KIDS];
