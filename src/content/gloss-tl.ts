@@ -944,6 +944,23 @@ export const GLOSS_TL: Record<string, string> = {
   'It hurts.': 'Masakit.',
   medicine: 'gamot',
   'My head hurts.': 'Masakit ang ulo ko.',
+  'I have been to Korea.': 'Nakapunta na ako sa Korea.',
+  'I have never been there.': 'Hindi pa ako nakapunta roon.',
+  'It is better to sleep early.': 'Mas mabuting matulog nang maaga.',
+  'It is good to exercise every day.': 'Mabuting mag-ehersisyo araw-araw.',
+  'It is good to drink a lot of water.': 'Mabuting uminom ng maraming tubig.',
+  'No need to worry.': 'Walang dapat ikabahala.',
+  'No need to hurry.': 'Hindi kailangang magmadali.',
+  'You do not need to come.': 'Hindi mo kailangang pumunta.',
+  'After studying, I sleep.': 'Pagkatapos mag-aral, natutulog ako.',
+  'After showering, I went out.': 'Pagkatapos maligo, lumabas ako.',
+  'I open my umbrella.': 'Binubuksan ko ang payong ko.',
+  socks: 'medyas',
+  'I put on my shoes.': 'Sinusuot ko ang sapatos ko.',
+  'Goodbye (you are leaving).': 'Paalam po (ikaw ang aalis).',
+  'Goodbye (I am leaving).': 'Paalam po (ako ang aalis).',
+  'Bye, take care.': 'Ingat ka.',
+  'See you again.': 'Magkita tayo ulit.',
 };
 
 /** Taglish gloss for an English gloss, or an empty string when there is none. */
