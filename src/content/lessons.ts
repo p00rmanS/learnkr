@@ -432,6 +432,7 @@ import { EXTRA11, KIDS6 } from './lessons-more11';
 import { EXTRA12, KIDS7 } from './lessons-more12';
 import { DEEP } from './lessons-deep';
 import { BASICS } from './lessons-basics';
+import { EXTRA13 } from './lessons-more13';
 import { EXTRA4, LEVELUP3 } from './lessons-more4';
 import { EXTRA5, LEVELUP4 } from './lessons-more5';
 
@@ -470,6 +471,7 @@ const RAW_LESSONS: Lesson[] = [
   ...EXTRA12,
   ...DEEP,
   ...BASICS,
+  ...EXTRA13,
 ];
 
 /** Small stable PRNG so the same quiz always shows its options in the same order. */
