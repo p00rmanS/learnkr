@@ -1004,6 +1004,22 @@ export const GLOSS_TL: Record<string, string> = {
   science: 'agham',
   art: 'sining',
   music: 'musika',
+  'I hope I pass.': 'Sana makapasa ako.',
+  'I hope it does not rain.': 'Sana hindi umulan.',
+  'I hope we go together.': 'Sana sabay tayong pumunta.',
+  'I also go.': 'Pupunta rin ako.',
+  'I only drink coffee.': 'Kape lang ang iniinom ko.',
+  'Just water, please.': 'Tubig lang po.',
+  'What floor is it?': 'Anong palapag ito?',
+  'It is the second stop.': 'Pangalawang hinto na ito.',
+  'I already ate.': 'Kumain na ako.',
+  'They have not come yet.': 'Hindi pa sila dumarating.',
+  'It is already finished.': 'Tapos na.',
+  'Stop it!': 'Tama na!',
+  'Stop playing games.': 'Tigilan ang paglalaro.',
+  'How about this?': 'Ano sa tingin mo dito?',
+  'How about a movie?': 'Manood tayo ng sine?',
+  'How is the taste?': 'Anong lasa?',
 };
 
 /** Taglish gloss for an English gloss, or an empty string when there is none. */
