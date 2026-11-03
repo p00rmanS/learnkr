@@ -1020,6 +1020,9 @@ export const GLOSS_TL: Record<string, string> = {
   'How about this?': 'Ano sa tingin mo dito?',
   'How about a movie?': 'Manood tayo ng sine?',
   'How is the taste?': 'Anong lasa?',
+  'What time is it?': 'Anong oras na?',
+  'It is 3 o clock.': 'Alas-tres na.',
+  'It is 6 o clock.': 'Alas-sais na.',
 };
 
 /** Taglish gloss for an English gloss, or an empty string when there is none. */
