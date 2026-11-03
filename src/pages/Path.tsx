@@ -18,6 +18,7 @@ interface Node {
   id: string;
   title: string;
   ko: string;
+  deep?: boolean;
   blurb: string;
   x: number;
   y: number;
@@ -41,6 +42,11 @@ export function Path() {
   const next = LESSONS.find((l) => !completed.includes(l.id));
   const [stage, setStage] = useState<number>(next?.phase ?? 0);
   const ph = STAGES[stage];
+  const [q, setQ] = useState('');
+  const query = q.trim().toLowerCase();
+  const hits = query
+    ? LESSONS.filter((l) => [l.id, l.title, l.ko, l.blurb, l.deep ? 'deep dive' : ''].some((s) => s.toLowerCase().includes(query)))
+    : [];
 
   // Left and right arrows switch stage
   useEffect(() => {
@@ -56,7 +62,7 @@ export function Path() {
 
   const { nodes, height } = useMemo(() => {
     const items = [
-      ...LESSONS.filter((l) => l.phase === stage).map((l) => ({ id: l.id, title: l.title, ko: l.ko, blurb: l.blurb, written: true })),
+      ...LESSONS.filter((l) => l.phase === stage).map((l) => ({ id: l.id, title: l.title, ko: l.ko, blurb: l.blurb, written: true, deep: !!l.deep })),
       ...UPCOMING.filter((u) => u.id.startsWith(`${stage}.`)).map((u) => ({ id: u.id, title: u.title, ko: u.ko, blurb: '', written: false })),
     ];
     const nodes: Node[] = items.map((l, k) => ({
@@ -93,6 +99,33 @@ export function Path() {
       <p className="eyebrow">The road</p>
       <h1 className="h-page" style={{ marginTop: 18 }}>Walk it <em>one stop</em> at a time.</h1>
       <p className="lede">Five stages from your first letter to natural Korean. Pick a stage; every finished stop stays open if you want to return.</p>
+
+      <div className="find-wrap">
+        <input
+          type="search"
+          className="find"
+          placeholder="Search: ordering, -고, 국물, deep dive..."
+          aria-label="Search lessons"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+        {query && (
+          <ul className="find-list" aria-label="Search results">
+            {hits.length === 0 && <li className="find-none">Nothing matches yet. Try a word like "food" or "deep".</li>}
+            {hits.map((l) => (
+              <li key={l.id}>
+                <Link to={`/learn/${l.id}`}>
+                  <span className="find-id">{l.id}</span>
+                  <span className="find-body">
+                    <b>{l.title}</b>
+                    <small>{STAGES.find((s) => s.n === l.phase)?.name}{l.deep ? ' · Deep dive' : ''}</small>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       <div className="stage-tabs" role="tablist" aria-label="Stages">
         {STAGES.map((s) => (
@@ -131,6 +164,7 @@ export function Path() {
               <div className="pin">{isDone ? <Check width={22} height={22} strokeWidth={2.6} /> : n.id}</div>
               <div className="lbl">
                 <b>{n.title}</b>
+                {n.deep && <em className="deep-tag">Deep dive</em>}
                 <small><span className="kr">{n.ko}</span>{n.written ? ` · ${n.blurb}` : ' · coming soon'}</small>
               </div>
             </>

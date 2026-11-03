@@ -12,6 +12,8 @@ export type Step =
       tl?: string[]; // Taglish explanation
       tip?: string; // pro tip
       remember?: string; // memory hook
+      tips?: string[]; // tricks beyond the single pro tip
+      locals?: { ko: string; en: string; note: string }[]; // what locals actually say
       glyphs?: { ch: string; sub: string }[];
       blocks?: { ch: string; parts: string[] }[];
       phrases?: { ko: string; en: string; rom?: string }[];
@@ -27,6 +29,7 @@ export interface Lesson {
   blurb: string;
   steps: Step[];
   items: ReviewItem[];
+  deep?: boolean; // long-form lesson with tips and local usage
 }
 
 const BASE: Omit<Lesson, 'phase'>[] = [
@@ -427,6 +430,7 @@ import { EXTRA9, KIDS4 } from './lessons-more9';
 import { EXTRA10, KIDS5 } from './lessons-more10';
 import { EXTRA11, KIDS6 } from './lessons-more11';
 import { EXTRA12, KIDS7 } from './lessons-more12';
+import { DEEP } from './lessons-deep';
 import { EXTRA4, LEVELUP3 } from './lessons-more4';
 import { EXTRA5, LEVELUP4 } from './lessons-more5';
 
@@ -463,6 +467,7 @@ const RAW_LESSONS: Lesson[] = [
   ...EXTRA10,
   ...EXTRA11,
   ...EXTRA12,
+  ...DEEP,
 ];
 
 /** Small stable PRNG so the same quiz always shows its options in the same order. */

@@ -961,6 +961,21 @@ export const GLOSS_TL: Record<string, string> = {
   'Goodbye (I am leaving).': 'Paalam po (ako ang aalis).',
   'Bye, take care.': 'Ingat ka.',
   'See you again.': 'Magkita tayo ulit.',
+  'Did you eat?': 'Kumain ka na ba?',
+  'Where are you going?': 'Saan ka pupunta?',
+  'I eat rice.': 'Kumakain ako ng kanin.',
+  'Korean language': 'wikang Koreano',
+  'It is good.': 'Maganda.',
+  broth: 'sabaw',
+  'it is (formal)': 'ay (pormal)',
+  'It is a bit expensive.': 'Medyo mahal.',
+  'A little more, please.': 'Konting dagdag po.',
+  'It is a little spicy.': 'Medyo maanghang.',
+  'apples and pears': 'mansanas at peras',
+  'coffee and bread': 'kape at tinapay',
+  'I go with my friend.': 'Sumasama ako sa kaibigan ko.',
+  'Yes, I am listening.': 'Opo, nakikinig ako.',
+  'No.': 'Hindi po.',
 };
 
 /** Taglish gloss for an English gloss, or an empty string when there is none. */

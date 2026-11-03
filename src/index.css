@@ -344,6 +344,25 @@ a.node:hover .lbl { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(
 .note.tl .nl { color: var(--blue); } .note.tip .nl { color: var(--red); } .note.mem .nl { color: var(--jade); }
 .note p { font-family: var(--hand); font-weight: 700; font-size: 22px; line-height: 1.28; color: var(--ink); }
 .note p + p { margin-top: 6px; }
+.note.loc { background: #dcebff; transform: rotate(0.3deg); }
+.note.loc .ic { color: var(--blue); } .note.loc .nl { color: var(--blue); }
+.tricks { margin: 8px 0 0; padding-left: 22px; font-family: var(--sans); font-size: 16px; line-height: 1.5; color: var(--ink); }
+.tricks li { margin: 6px 0; }
+.local { margin-top: 14px; }
+.local-ko { display: inline-flex; align-items: center; gap: 8px; background: none; border: 0; padding: 0; cursor: pointer; font-family: var(--kr); font-size: 22px; font-weight: 900; color: var(--ink); }
+.local-en { display: block; margin-top: 2px; color: var(--muted); font-family: var(--sans); font-size: 15px; }
+.note .local p { font-family: var(--sans); font-weight: 400; font-size: 15px; line-height: 1.5; margin-top: 4px; }
+.deep-tag { display: inline-block; font-style: normal; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 8px; margin-left: 8px; border: 1.5px solid var(--ink); background: var(--hl); }
+.find-wrap { max-width: 560px; margin: 18px 0 22px; position: relative; }
+.find { width: 100%; font-family: var(--sans); font-size: 17px; padding: 12px 16px; background: var(--card); color: var(--ink); border: 2px solid var(--ink); box-shadow: var(--shadow); outline: none; }
+.find:focus-visible { box-shadow: var(--shadow-lg); }
+.find-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.find-list a { display: flex; gap: 12px; align-items: center; padding: 10px 14px; background: var(--card); color: var(--ink); text-decoration: none; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.find-list a:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.find-id { font-family: var(--mono); font-size: 14px; color: var(--muted); min-width: 38px; }
+.find-body b { display: block; font-family: var(--display); font-weight: 400; font-size: 18px; }
+.find-body small { color: var(--muted); font-size: 14px; }
+.find-none { padding: 10px 14px; color: var(--muted); font-family: var(--sans); }
 
 /* quiz */
 .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin: 30px 0; }
