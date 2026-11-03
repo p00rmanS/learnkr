@@ -431,6 +431,7 @@ import { EXTRA10, KIDS5 } from './lessons-more10';
 import { EXTRA11, KIDS6 } from './lessons-more11';
 import { EXTRA12, KIDS7 } from './lessons-more12';
 import { DEEP } from './lessons-deep';
+import { BASICS } from './lessons-basics';
 import { EXTRA4, LEVELUP3 } from './lessons-more4';
 import { EXTRA5, LEVELUP4 } from './lessons-more5';
 
@@ -468,6 +469,7 @@ const RAW_LESSONS: Lesson[] = [
   ...EXTRA11,
   ...EXTRA12,
   ...DEEP,
+  ...BASICS,
 ];
 
 /** Small stable PRNG so the same quiz always shows its options in the same order. */
@@ -501,7 +503,18 @@ export function balanceChoices(lessons: Lesson[]): Lesson[] {
   }));
 }
 
-export const LESSONS: Lesson[] = balanceChoices(RAW_LESSONS);
+const curriculumOrder = (a: Lesson, b: Lesson) => {
+  if (a.phase !== b.phase) return a.phase - b.phase;
+  const x = a.id.split('.').map(Number);
+  const y = b.id.split('.').map(Number);
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    const d = (x[i] ?? 0) - (y[i] ?? 0);
+    if (d) return d;
+  }
+  return 0;
+};
+
+export const LESSONS: Lesson[] = balanceChoices(RAW_LESSONS).sort(curriculumOrder);
 export const KIDS: Lesson[] = balanceChoices([...KIDS_A, ...KIDS2, ...KIDS3, ...KIDS4, ...KIDS5, ...KIDS6, ...KIDS7]);
 
 /** Every lesson, including the Kids track. */
