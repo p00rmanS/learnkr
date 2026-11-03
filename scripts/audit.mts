@@ -56,6 +56,9 @@ for (const l of ALL_LESSONS) {
       if (nonEmpty(s.remember)) withRemember++;
       else err(`${w}: no memory hook`);
       if (!s.phrases && !s.glyphs && !s.blocks) warn(`${w}: teach step shows no examples`);
+      if (l.deep && !(s.tips?.length && s.locals?.length)) err(`${w}: deep lesson step needs tips and what locals say`);
+      for (const t of s.tips ?? []) if (!nonEmpty(t)) err(`${w}: empty tip`);
+      for (const lc of s.locals ?? []) if (!hangul.test(lc.ko) || !nonEmpty(lc.en) || !nonEmpty(lc.note)) err(`${w}: incomplete local phrase "${lc.ko}"`);
       for (const p of s.phrases ?? []) {
         phrases++;
         if (!nonEmpty(p.ko) || !nonEmpty(p.en)) err(`${w}: empty phrase`);
@@ -134,7 +137,10 @@ const sample: string[] = [];
 for (const l of ALL_LESSONS) {
   l.items.forEach((i) => sample.push(i.korean));
   l.steps.forEach((s) => {
-    if (s.kind === 'teach') (s.phrases ?? []).forEach((p) => sample.push(p.ko));
+    if (s.kind === 'teach') {
+      (s.phrases ?? []).forEach((p) => sample.push(p.ko));
+      (s.locals ?? []).forEach((lc) => sample.push(lc.ko));
+    }
     if (s.kind === 'choice') {
       if (s.big) sample.push(s.big);
       if (s.speak) sample.push(s.speak);

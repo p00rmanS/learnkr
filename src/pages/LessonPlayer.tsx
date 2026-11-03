@@ -83,6 +83,30 @@ function Teach({ step, onNext, speak }: { step: Extract<Step, { kind: 'teach' }>
             )}
           </div>
         )}
+
+        {step.tips && (
+          <div className="notes">
+            <aside className="note tip"><div className="ic"><Bolt /></div><div><div className="nl">Tips and tricks</div><ul className="tricks">{step.tips.map((t, i) => <li key={i}>{t}</li>)}</ul></div></aside>
+          </div>
+        )}
+
+        {step.locals && (
+          <div className="notes">
+            <aside className="note loc"><div className="ic"><Bubble /></div><div>
+              <div className="nl">What locals say</div>
+              {step.locals.map((lc) => (
+                <div className="local" key={lc.ko}>
+                  <button type="button" className="local-ko" onClick={() => speak(lc.ko)} aria-label={`Hear ${lc.ko}`}>
+                    <Speaker className="sp" width={16} height={16} />
+                    <span>{lc.ko}</span>
+                  </button>
+                  <span className="local-en">{lc.en}</span>
+                  <p>{lc.note}</p>
+                </div>
+              ))}
+            </div></aside>
+          </div>
+        )}
       </div>
       <div className="actionbar"><div className="in"><span className="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> move between steps · <kbd>Enter</kbd> continue</span><button className="btn ph" type="button" onClick={onNext}>Continue <Arrow /></button></div></div>
     </>
