@@ -1,0 +1,39 @@
+/* Calm creator-style layer: quieter type, fewer decorations, sized for reading. */
+
+body { font-size: 17px; line-height: 1.6; }
+
+.eyebrow,
+.step .tag {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ph-ink);
+  transform: none;
+}
+.eyebrow::before,
+.step .tag::before { content: none; }
+
+.h-page {
+  font-size: clamp(32px, 4.4vw, 56px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+.h-page em { background: none; font-style: normal; color: var(--ph-ink); padding: 0; }
+
+.lede { font-size: clamp(16px, 1.5vw, 18px); line-height: 1.6; }
+
+.note { padding: 18px 22px 20px; }
+.note .nl { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.note p { font-size: 16px; font-weight: 500; line-height: 1.6; }
+.tricks { font-size: 15px; }
+
+.scribble { font-size: 16px; transform: none; font-weight: 700; }
+.say-legend { font-size: 14px; line-height: 1.5; }
+
+.note::before,
+.tape::before,
+.hero-stage::before,
+.lesson::after { display: none; }
