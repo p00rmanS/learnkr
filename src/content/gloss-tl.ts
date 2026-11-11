@@ -1086,6 +1086,21 @@ export const GLOSS_TL: Record<string, string> = {
   'While I was out shopping, I also bought milk.': 'Habang namimili, bumili rin ako ng gatas.',
   'Since we are out, let us take a walk.': 'Dahil nasa labas na rin tayo, maglakad-lakad tayo.',
   'Since I came out, let us take a walk.': 'Dahil lumabas na rin tayo, maglakad-lakad tayo.',
+  'It might rain.': 'Baka umulan.',
+  'I might be late.': 'Baka mahuli ako.',
+  'He might come.': 'Baka pumunta siya.',
+  'Not only Korean food, I also like Japanese food.': 'Hindi lang Korean food, gusto ko rin ang Japanese food.',
+  'Not only friends, family is also coming.': 'Hindi lang kaibigan, pupunta rin ang pamilya.',
+  'I waited until he came.': 'Naghintay ako hanggang dumating siya.',
+  'I study until it ends.': 'Nag-aaral ako hanggang matapos.',
+  'I fell asleep while studying.': 'Nakatulog ako habang nag-aaral.',
+  'While going, I met a friend.': 'Habang papunta, nakita ko ang kaibigan ko.',
+  'I ended up studying Korean.': 'Napunta akong nag-aral ng Korean.',
+  'I came to live in this neighbourhood.': 'Napunta akong tumira sa lugar na ito.',
+  'It is funny enough to make you laugh.': 'Nakakatawa, mapapatawa ka.',
+  'I ate until my stomach hurt.': 'Kumain ako hanggang sumakit ang tiyan ko.',
+  'I am eating right now.': 'Kumakain ako ngayon.',
+  'I am doing homework.': 'Gumagawa ako ng takdang-aralin.',
 };
 
 /** Taglish gloss for an English gloss, or an empty string when there is none. */
