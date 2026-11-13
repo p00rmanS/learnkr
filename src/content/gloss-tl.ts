@@ -1101,6 +1101,23 @@ export const GLOSS_TL: Record<string, string> = {
   'I ate until my stomach hurt.': 'Kumain ako hanggang sumakit ang tiyan ko.',
   'I am eating right now.': 'Kumakain ako ngayon.',
   'I am doing homework.': 'Gumagawa ako ng takdang-aralin.',
+  'Please recommend something.': 'Pakirekomenda naman po.',
+  'What is the most delicious?': 'Ano ang pinakamasarap?',
+  'Do you recommend this?': 'Inirerekomenda mo ba ito?',
+  'I tend to go to bed early.': 'Madalas akong matulog nang maaga.',
+  'This food is fairly spicy.': 'Medyo maanghang ang pagkaing ito.',
+  'This place is rather expensive.': 'Medyo mahal dito.',
+  'I have no choice but to wait.': 'Wala akong magawa kundi maghintay.',
+  'There is no bus, so I have to walk.': 'Walang bus kaya kailangan kong maglakad.',
+  'I have to do it.': 'Kailangan kong gawin ito.',
+  'I am learning Korean little by little.': 'Unti-unti akong natututo ng Korean.',
+  'I have walked all the way here.': 'Naglakad ako hanggang dito.',
+  'The weather is gradually getting warmer.': 'Unti-unting umiinit ang panahon.',
+  'I think it is because I did not sleep.': 'Siguro dahil hindi ako nakatulog.',
+  'I think it is because the weather is cold.': 'Siguro dahil malamig ang panahon.',
+  'She is tall and has short hair.': 'Matangkad siya at maikli ang buhok.',
+  'He is a kind person.': 'Mabait siyang tao.',
+  'Her personality is fairly cheerful.': 'Medyo masayahin ang ugali niya.',
 };
 
 /** Taglish gloss for an English gloss, or an empty string when there is none. */
