@@ -3,7 +3,7 @@
    A Korean school notebook (공책): ruled paper, ink, red pen, sticky notes,
    handwritten margin comments and the teacher's "참 잘했어요" stamp.
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;800&family=Courier+Prime:wght@400;700&family=Gaegu:wght@400;700&family=Gowun+Dodum&family=Noto+Serif+KR:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Courier+Prime:wght@400;700&display=swap');
 
 :root {
   color-scheme: light;
@@ -683,8 +683,8 @@ kbd { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 1px 
 
 .detail dd.tl-dd { font-family: var(--hand); font-weight: 700; font-size: 22px; line-height: 1.25; color: var(--blue); }
 
-.ans-tl { font-family: 'Gaegu', cursive; font-size: 1.35rem; color: var(--blue); margin-top: 4px; }
-.pb-tl { display: block; font-family: 'Gaegu', cursive; font-style: normal; font-size: 1.05rem; color: var(--blue); }
+.ans-tl { font-family: var(--sans); font-size: 1.35rem; color: var(--blue); margin-top: 4px; }
+.pb-tl { display: block; font-family: var(--sans); font-style: normal; font-size: 1.05rem; color: var(--blue); }
 
 /* Nothing may widen the page sideways on phones (tilted ticker, hard shadows). */
 html { overflow-x: clip; max-width: 100%; }
